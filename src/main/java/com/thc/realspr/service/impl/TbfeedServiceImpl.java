@@ -2,6 +2,8 @@ package com.thc.realspr.service.impl;
 
 import com.thc.realspr.domain.Tbfeed;
 import com.thc.realspr.domain.Tbuser;
+import com.thc.realspr.dto.TbfeedDto;
+import com.thc.realspr.mapper.TbfeedMapper;
 import com.thc.realspr.repository.TbfeedRepository;
 import com.thc.realspr.repository.TbuserRepository;
 import com.thc.realspr.service.TbfeedService;
@@ -17,35 +19,28 @@ import java.util.Map;
 public class TbfeedServiceImpl implements TbfeedService {
 
     private final TbfeedRepository tbfeedRepository;
+    private final TbfeedMapper tbfeedMapper;
+
     public TbfeedServiceImpl(
-            TbfeedRepository tbfeedRepository
+            TbfeedRepository tbfeedRepository,
+            TbfeedMapper tbfeedMapper
     ) {
         this.tbfeedRepository = tbfeedRepository;
+        this.tbfeedMapper = tbfeedMapper;
     }
 
-    public Map<String, Object> create(Map<String, Object> param){
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        System.out.println(param);
-//        Tbuser tbuser = Tbuser.of(param.get("username") + "", param.get("password") + "");
-//        tbuserRepository.save(tbuser);
-        System.out.println(param);
-        Tbfeed tbfeed = Tbfeed.of(param.get("title") + "", param.get("author") + "", param.get("content") + "");
-        tbfeedRepository.save(tbfeed);
-        returnMap.put("id", tbfeed.getId());
-        returnMap.put("title", tbfeed.getTitle());
-        returnMap.put("content", tbfeed.getContent());
-        returnMap.put("author", tbfeed.getAuthor());
-        returnMap.put("createdAt", tbfeed.getCreatedDate());
-        returnMap.put("modifiedAt", tbfeed.getModifiedDate());
-        return returnMap;
+    public TbfeedDto.CreateResDto create(TbfeedDto.CreateReqDto param) {
+        return tbfeedRepository.save(param.toEntity()).toTbfeedAfterCreateDto();
     }
+
     public void delete(String id) {
         Tbfeed tbfeed = tbfeedRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
         tbfeed.setDeleted("Y");
         tbfeedRepository.save(tbfeed);
 
     }
-    public Map<String, Object> update(Map<String, Object> param){
+
+    public Map<String, Object> update(Map<String, Object> param) {
 //        Map<String, Object> returnMap = new HashMap<String, Object>();
 //        System.out.println(param);
 //        Tbuser tbuser = tbuserRepository.findById(param.get("id") + "").orElseThrow(() -> new RuntimeException(""));
@@ -62,40 +57,37 @@ public class TbfeedServiceImpl implements TbfeedService {
 //        tbuserRepository.save(tbuser);
 //        returnMap.put("id", tbuser.getId());
 //        return returnMap;
-   return null;
+        return null;
     }
 
-    public Map<String, Object> get(String id){
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        System.out.println(id);
-        Tbfeed tbfeed = tbfeedRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
+    public TbfeedDto.SelectResDto get(String id) {
+        TbfeedDto.SelectResDto selectDto = tbfeedMapper.detail(id);
 
-        returnMap.put("id", tbfeed.getId());
-        returnMap.put("title", tbfeed.getTitle());
-        returnMap.put("content", tbfeed.getContent());
-        returnMap.put("author", tbfeed.getAuthor());
-        returnMap.put("createdAt", tbfeed.getCreatedDate());
-        returnMap.put("modifiedAt", tbfeed.getModifiedDate());
-
-        return returnMap;
+        return selectDto;
     }
 
-    public List<Map<String, Object>> getAll() {
-        List<Map<String, Object>> result = new ArrayList<>();
+    //    public List<TbfeedDto.SelectResDto> list(TbfeedDto.ListReqDto param) {
+////        List<Tbfeed> allFeed  = tbfeedRepository.findAll();
+////        List<Tbfeed> allFeed = tbfeedRepository.findByDeletedNot("Y");
+//
+//        List<TbfeedDto.SelectResDto> list = tbfeedMapper.list(param);
+//        List<TbfeedDto.SelectResDto> newlist = new ArrayList<>();
+//        return newlist;
+////        for (TbfeedDto.SelectResDto tbfeedSelectDto : list) {
+////            newlist.add(get(tbfeedSelectDto.getId()));
+////        }
+////        return newlist;
+//    }
+    public List<TbfeedDto.SelectResDto> getAll() {
 //        List<Tbfeed> allFeed  = tbfeedRepository.findAll();
-        List<Tbfeed> allFeed  = tbfeedRepository.findByDeletedNot("Y");
+//        List<Tbfeed> allFeed = tbfeedRepository.findByDeletedNot("Y");
 
-        for(Tbfeed tbfeed : allFeed) {
-            Map<String, Object> returnMap = new HashMap<String, Object>();
-            returnMap.put("id", tbfeed.getId());
-            returnMap.put("title", tbfeed.getTitle());
-            returnMap.put("content", tbfeed.getContent());
-            returnMap.put("author", tbfeed.getAuthor());
-            returnMap.put("createdAt", tbfeed.getCreatedDate());
-            returnMap.put("modifiedAt", tbfeed.getModifiedDate());
-            result.add(returnMap);
+        List<TbfeedDto.SelectResDto> list = tbfeedMapper.getAll();
+        List<TbfeedDto.SelectResDto> newlist = new ArrayList<>();
+//        return newlist;
+        for (TbfeedDto.SelectResDto tbfeedSelectDto : list) {
+            newlist.add(get(tbfeedSelectDto.getId()));
         }
-
-        return result;
+        return newlist;
     }
 }

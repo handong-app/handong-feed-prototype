@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thc.realspr.mapper.TbfeedMapper">
+
+    <select id="detail" parameterType="hashMap" resultType="com.thc.realspr.dto.TbfeedDto$SelectResDto">
+        SELECT id
+             , deleted
+             , createdDate  as createdAt
+             , modifiedDate as modifiedAt
+             , title
+             , author
+             , content
+        FROM mydb_Tbfeed
+        WHERE id = #{id}
+    </select>
+    <select id="getAll" parameterType="hashMap" resultType="com.thc.realspr.dto.TbfeedDto$SelectResDto">
+        SELECT id
+        FROM mydb_Tbfeed
+        WHERE deleted ='N'
+        <!--        <if test="username != null and username !=''">AND tbuser.username = #{username}</if>-->
+        <!--        <if test="name != null and name !=''">AND tbuser.name LIKE CONCAT('%', #{name}, '%')</if>-->
+        <!--        <if test="nick != null and nick !=''">AND tbuser.nick LIKE CONCAT('%', #{nick}, '%')</if>-->
+        <!--        <if test="phone != null and phone !=''">AND tbuser.phone = #{phone}</if>-->
+    </select>
+    <!--
+    <select id="list" parameterType="com.thc.realspr.dto.TbuserDto$TbuserListDto" resultType="com.thc.realspr.dto.TbuserDto$TbuserSelectDto">
+        SELECT tbuser.id
+        FROM tbuser
+        WHERE tbuser.id is not null
+    </select>
+    -->
+
+</mapper>
