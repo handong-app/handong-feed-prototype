@@ -63,8 +63,6 @@ public class TbfeedDto {
         private String content;
         @Schema(description = "author", example = "")
         private String author;
-        @Schema(description = "phone", example = "")
-        private String phone;
         @Schema(description = "createdAt", example = "")
         private String createdAt;
         @Schema(description = "modifiedAt", example = "")
