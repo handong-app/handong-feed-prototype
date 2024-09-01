@@ -36,6 +36,6 @@ public class Tbuser {
     @PrePersist
     public void onPrePersist() {
         this.id = UUID.randomUUID().toString().replace("-", "");
-        this.deleted = "N";
+        this.deleted = "N"; // aaa
     }
 }
