@@ -12,7 +12,7 @@ const FeedItemGallery = ({ images = [] }) => {
       {images.length > 4 && (
         <div className="more-images-overlay">
           {images.length > 5 && <span>+{images.length - 4}</span>}
-          <img key={1} src={images[3]} alt={`Image`} />
+          <img key={1} src={images[3]} alt={`Image 4`} />
         </div>
       )}
     </div>

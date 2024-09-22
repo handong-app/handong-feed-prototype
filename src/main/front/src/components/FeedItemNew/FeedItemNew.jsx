@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import kakaotalk from "./kakaotalk.png";
 import comment from "./comment.png";

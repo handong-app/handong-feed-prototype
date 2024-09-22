@@ -1,7 +1,7 @@
 import "./NewUI.css";
 import FeedItemNew from "../components/FeedItemNew/FeedItemNew";
 import WeatherData from "../components/FeedItemNew/WeatherData";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { removeDuplicates } from "../tools/tools";
 
