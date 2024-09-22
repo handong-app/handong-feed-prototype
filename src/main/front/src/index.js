@@ -1,19 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import NewUI from "./pages/NewUI";
 import Admin from "./pages/Admin";
+import { RecoilRoot } from "recoil";
+import LoginProtected from "./components/LoginProtected";
+import MainScreen from "./pages/MainScreen";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NewUI />,
+    element: <MainScreen />,
   },
   {
-    path: "/newui",
-    element: <App />,
+    path: "/feed",
+    element: <LoginProtected comp={NewUI} />,
   },
   {
     path: "/admin",
@@ -24,7 +26,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
   </React.StrictMode>
 );
 
