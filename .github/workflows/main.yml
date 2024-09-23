@@ -20,6 +20,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    environment: SPRING_BOOT
+
     # 깃허브에서 제공하는 checkout 엑션 사용
     steps:
       - uses: actions/checkout@v3
