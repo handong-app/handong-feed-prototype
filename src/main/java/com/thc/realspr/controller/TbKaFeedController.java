@@ -42,7 +42,7 @@ public class TbKaFeedController {
         final String afterSentAt = param.get("afterSentAt");
         final String all = param.get("all");
 
-        if (all.equalsIgnoreCase("y")) reqUserId = null;
+        if (all != null && all.equalsIgnoreCase("y")) reqUserId = null;
 
         if (afterSentAt != null && !afterSentAt.equals("-1"))
             return tbKaFeedService.scrollList(Integer.parseInt(afterSentAt), reqUserId);
