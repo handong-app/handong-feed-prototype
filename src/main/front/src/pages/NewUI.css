@@ -127,10 +127,10 @@ body,
   margin-top: 8px;
 }
 .NewUI .FeedItem .content {
-  white-space: pre;
-  text-wrap: pretty !important;
+  white-space: pre-wrap;
+  word-wrap: break-word; /* Older syntax for wider support */
   word-break: break-all;
-  overflow-wrap: break-word;
+  overflow-wrap: break-word; /* Modern syntax */
   padding-top: 16px;
   padding-bottom: 16px;
 }
