@@ -11,7 +11,7 @@ public class TokenFactory {
 //    private final String SECRET_KEY = "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";
 
     static String temp_key = "21098765432109876543210987654321";
-    static int intervalRefreshToken = 60000;
+    static int intervalRefreshToken = 86400; // 1 day
     int intervalAccessToken = 6000;
 
     public static String issueRefreshToken(String tbuserId) {

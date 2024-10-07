@@ -82,9 +82,9 @@ public class TbuserServiceImpl implements TbuserService {
 
 
         // 유저가 @handong.ac.kr 이메일이 아니면 예외 처리
-        if (email == null || !email.endsWith("@handong.ac.kr")) {
-            throw new NoAuthorizationException("Unauthorized user");
-        }
+//        if (email == null || !email.endsWith("@handong.ac.kr")) {
+//            throw new NoAuthorizationException("Unauthorized user");
+//        }
 
         Tbuser tbuser = tbuserRepository.findByEmail(email);
 
