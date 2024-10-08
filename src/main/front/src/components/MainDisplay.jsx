@@ -8,7 +8,10 @@ function MainDisplay({ children }) {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <MainDrawer />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, maxWidth: 700, m: "auto" }}
+      >
         {children}
       </Box>
       {/* <Button variant="contained">Hello world</Button> */}

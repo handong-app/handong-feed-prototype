@@ -1,0 +1,92 @@
+.FeedCardGallery {
+  /* Base styles for the post images container */
+  .post-images {
+    padding: 0 24px;
+    padding-bottom: 16px;
+    display: grid;
+    gap: 5px;
+    position: relative;
+  }
+
+  /* 1 image layout - full width */
+  .images-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .images-1 img,
+  .images-1 video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* 2 images - two equal-sized images side by side */
+  .images-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .images-2 img,
+  .images-2 video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* 3 images - one large image on the left, two smaller stacked images on the right */
+  .images-3 {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .images-3 img:first-child,
+  .images-3 video:first-child {
+    grid-row: 1 / span 2;
+  }
+
+  .images-3 img,
+  .images-3 video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* 4 images - a 2x2 grid */
+  .images-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .images-4 img,
+  .images-4 video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* More than 4 images - display 4 images with a + overlay for remaining images */
+  .more-images-overlay {
+    grid-column: 2 / span 1;
+    grid-row: 2 / span 1;
+
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .more-images-overlay span {
+    z-index: 2;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -1,0 +1,5 @@
+.FeedCard .show-more-less-clickable {
+  display: block;
+  color: #6699cc;
+  cursor: pointer;
+}
