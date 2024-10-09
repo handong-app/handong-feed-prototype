@@ -11,6 +11,8 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import DownloadIcon from "@mui/icons-material/Download";
+
 import {
   Badge,
   BottomNavigation,
@@ -21,6 +23,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MyAppbar from "./MyAppbar";
 import { useFeedCount } from "../hooks/useFeed";
+import useDownloadPWA from "../hooks/useDownloadPWA";
 
 const drawerWidth = 240;
 
@@ -82,6 +85,8 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MainDrawer() {
   const navigate = useNavigate();
+  const handleDownload = useDownloadPWA();
+
   // eslint-disable-next-line unused-imports/no-unused-vars
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
@@ -212,6 +217,75 @@ export default function MainDrawer() {
                   </ListItem>
                 </Tooltip>
               ))}
+              <Tooltip
+                title="Download APP"
+                placement="right"
+                arrow
+                slotProps={{
+                  popper: {
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -14],
+                        },
+                      },
+                    ],
+                  },
+                }}
+              >
+                <ListItem disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
+                    onClick={() => {
+                      handleDownload();
+                    }}
+                    sx={[
+                      {
+                        minHeight: 48,
+                        px: 2.5,
+                        my: 1.1,
+                      },
+                      open
+                        ? {
+                            justifyContent: "initial",
+                          }
+                        : {
+                            justifyContent: "center",
+                          },
+                    ]}
+                  >
+                    <ListItemIcon
+                      sx={[
+                        {
+                          minWidth: 0,
+                          justifyContent: "center",
+                        },
+                        open
+                          ? {
+                              mr: 3,
+                            }
+                          : {
+                              mr: "auto",
+                            },
+                      ]}
+                    >
+                      <DownloadIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Download APP"
+                      sx={[
+                        open
+                          ? {
+                              opacity: 1,
+                            }
+                          : {
+                              opacity: 0,
+                            },
+                      ]}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
             </List>
           </Box>
         </Drawer>

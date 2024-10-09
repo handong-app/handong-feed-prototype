@@ -7,7 +7,9 @@ import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import FeedIcon from "@mui/icons-material/Feed";
-import { Slide, useScrollTrigger } from "@mui/material";
+import { IconButton, Slide, Tooltip, useScrollTrigger } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
+import useDownloadPWA from "../hooks/useDownloadPWA";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -29,6 +31,7 @@ function HideOnScroll(props) {
 
 function MyAppbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const handleDownload = useDownloadPWA();
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const handleOpenUserMenu = (event) => {
@@ -80,12 +83,16 @@ function MyAppbar() {
               },
             }}
           ></Box> */}
-            <Box sx={{ flexGrow: 0 }}>
-              {/* <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip> */}
+            <Box sx={{ flexGrow: 0, position: "absolute", right: 0 }}>
+              <Tooltip title="Download PWA">
+                <IconButton
+                  color="inherit"
+                  onClick={handleDownload}
+                  aria-label="download app"
+                >
+                  <DownloadIcon />
+                </IconButton>
+              </Tooltip>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
