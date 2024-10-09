@@ -3,7 +3,6 @@ const urlsToCache = [
   "/",
   "/index.html",
   "/favicon.png",
-  "/logo192.png",
   "/manifest.json",
   // Add any other assets or paths you want to cache
 ];

@@ -33,7 +33,7 @@ function LoginProtected({ comp: Comp }) {
     // }
   }
 
-  return <Navigate to="/" />;
+  return <Navigate to="/land" />;
 }
 
 export default LoginProtected;
