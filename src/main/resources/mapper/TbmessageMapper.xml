@@ -47,7 +47,6 @@
             AND #{userId} = m.userId)
         </if>
         ORDER BY last_sent_at DESC) AS subject
-        JOIN TbKaMessage AS message ON message.chat_id = subject.last_sent_chat_id
     </select>
 
     <select id="fileDetails" parameterType="string" resultType="com.thc.realspr.dto.TbmessageDto$FileDetail">
