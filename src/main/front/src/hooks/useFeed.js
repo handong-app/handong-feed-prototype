@@ -16,7 +16,7 @@ export const useFeedCount = () => {
     // Update badge as well
     if (navigator.setAppBadge) {
       // Display the number of unread messages.
-      navigator.setAppBadge(count > 0 ? count : 0);
+      navigator.setAppBadge(Math.max(count, 0));
     }
   }, [count]);
 
