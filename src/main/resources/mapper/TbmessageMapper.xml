@@ -52,12 +52,18 @@
     <select id="fileDetails" parameterType="string" resultType="com.thc.realspr.dto.TbmessageDto$FileDetail">
         SELECT file.hash AS hash,
                file.ext  AS ext
-        FROM (SELECT file_hash, appear_order
-              FROM TbFileMessageRelation
-              WHERE message_id = #{messageId}) as fml
-                 LEFT JOIN TbKaFile AS file
-                           ON file.hash = fml.file_hash
-        ORDER BY fml.appear_order
+        FROM TbKaFile AS file
+                 JOIN (SELECT file_hash, appear_order, MAX(modified_at) AS latest_modified_at
+                       FROM TbFileMessageRelation
+                       WHERE message_id = #{messageId}
+                       GROUP BY file_hash, appear_order) AS fml
+                      ON file.hash = fml.file_hash
+                 JOIN (SELECT appear_order, MAX(modified_at) AS latest_modified_at
+                       FROM TbFileMessageRelation
+                       WHERE message_id = #{messageId}
+                       GROUP BY appear_order) AS latest ON fml.appear_order = latest.appear_order
+            AND fml.latest_modified_at = latest.latest_modified_at
+        ORDER BY fml.appear_order;
     </select>
 
 </mapper>
