@@ -1,8 +1,27 @@
 import "./FeedCardGallery.css";
-import { getExtensionFromUrl, isImage, isVideo } from "../tools/tools";
+import { getExtensionFromUrl, isBlob, isImage, isVideo } from "../tools/tools";
+import { useEffect, useState } from "react";
 
 const FeedCardGallery = ({ images = [] }) => {
-  const filteredImages = images.filter((url) => isImage(url) || isVideo(url));
+  const [filteredImages, setFilteredImages] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      setFilteredImages(
+        (
+          await Promise.all(
+            images.map(async (url) => {
+              return url;
+            })
+          )
+        ).filter((url) => url)
+      );
+    })();
+  }, [images]);
+
+  // const filteredImages = images.filter(
+  //   (url) => isImage(url) || isVideo(url) || isBlob(url)
+  // );
   if (filteredImages.length === 0) return <></>;
   return (
     <div className="FeedCardGallery">
@@ -16,7 +35,9 @@ const FeedCardGallery = ({ images = [] }) => {
               Your browser does not support the video tag.
             </video>
           ) : (
-            <>Unknown Data</>
+            <>
+              <div>{url}</div>
+            </>
           )
         )}
         {filteredImages.length >= 4 && (

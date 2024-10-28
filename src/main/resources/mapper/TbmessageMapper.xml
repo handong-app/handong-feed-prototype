@@ -15,7 +15,7 @@
         FROM (SELECT *
         FROM TbSubject s
         WHERE last_sent_at &lt; #{afterSentAt}
-        AND last_sent_at &gt; (UNIX_TIMESTAMP() - (3 * 24 * 60 * 60))
+        AND last_sent_at &gt; (UNIX_TIMESTAMP() - (3 * 24 * 60 * 6000))
         <if test="fetchType == 'unseen' and userId != null and userId != ''">
             AND NOT EXISTS (SELECT 1
             FROM mydb_TbUserInteraction m
@@ -39,7 +39,7 @@
         FROM (SELECT *
         FROM TbSubject s
         WHERE last_sent_at &lt; #{afterSentAt}
-        AND last_sent_at &gt; (UNIX_TIMESTAMP() - (3 * 24 * 60 * 60))
+        AND last_sent_at &gt; (UNIX_TIMESTAMP() - (3 * 24 * 60 * 6000))
         <if test="userId != null and userId != ''">
             AND NOT EXISTS (SELECT 1
             FROM mydb_TbUserInteraction m

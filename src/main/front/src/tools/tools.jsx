@@ -64,6 +64,12 @@ export const isVideo = (url) => {
   return videoExtensions.includes(extension);
 };
 
+export const isBlob = (url) => {
+  // If not blob, end the function
+  if (!(typeof url === "string" && url.startsWith("blob:"))) return false;
+  return true;
+};
+
 export const getDateString = () => {
   const date = new Date();
   const year = date.getFullYear();
