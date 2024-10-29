@@ -119,7 +119,7 @@ export default function FeedCard({ loading, item, watchSeen = false }) {
             subheader={formatTimestamp(item.createdAt)}
           />
           <CardMedia sx={{ width: "100%" }}>
-            {item.files && <FeedCardGallery images={item.files} />}
+            {item.files && <FeedCardGallery images={item.files} id={item.id} />}
           </CardMedia>
           <CardContent
             sx={{

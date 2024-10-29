@@ -5,12 +5,12 @@ import { getExtensionFromUrl, isImage, isVideo } from "../tools/tools";
 import "photoswipe/dist/photoswipe.css";
 import FeedCardImageItem from "./FeedCardImageItem";
 
-const FeedCardGallery = ({ images = [] }) => {
+const FeedCardGallery = ({ images = [], id }) => {
   const filteredImages = images.filter((url) => isImage(url) || isVideo(url));
   if (filteredImages.length === 0) return <></>;
   return (
     <div className="FeedCardGallery">
-      <Gallery withDownloadButton>
+      <Gallery withDownloadButton id={id}>
         <FeedCardGalleryContent
           images={images}
           filteredImages={filteredImages}
