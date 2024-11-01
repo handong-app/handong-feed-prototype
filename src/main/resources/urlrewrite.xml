@@ -5,6 +5,12 @@
         <to last="true">-</to>
     </rule>
 
+    <!-- Exclude paths with file extensions from forwarding -->
+    <rule>
+        <from>^/.*\.(jpg|jpeg|png|gif|json|css|js|svg|ico|webp|woff|woff2|ttf|otf)$</from>
+        <to last="true">-</to>
+    </rule>
+
     <!-- Forward all other paths to index.html -->
     <rule>
         <from>^/.*</from>
