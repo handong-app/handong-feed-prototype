@@ -49,6 +49,47 @@ public class FirebaseService {
                 + fileName.replaceAll("/", "%2F") + "?alt=media";
     }
 
+    /**
+     * 단일 파일 업로드
+     *
+     * @param file 업로드할 MultipartFile
+     * @param folder 저장할 폴더명 (예: "LostItem")
+     * @param itemId 파일을 구분하는 ID (예: 분실물 ID)
+     * @param fileOrder 파일의 순서 (예: 1)
+     * @return 업로드된 파일의 공개 URL
+     */
+    public String uploadFile(MultipartFile file, String folder, String itemId, int fileOrder) {
+        try {
+            // 파일의 해시값을 생성하여 파일 이름에 추가
+            String fileHash = Hasher.hashFileToHex(file);
+            String fileName = folder + "/" + itemId + "_" + fileHash;
+            Blob blob = bucket.create(fileName, file.getBytes(), file.getContentType());
+
+            long fileSize = blob.getSize();
+            String fileType = blob.getContentType();
+
+            log.info("📍 Uploaded file name: {}", file.getOriginalFilename());
+            log.info("📍 Uploaded file size: {}", fileSize);
+            log.info("📍 Uploaded file type: {}", fileType);
+
+            String fileUrl = generateFileUrl(fileName);
+
+            // 파일 정보 DB에 저장
+            tblostItemFileService.createLostItemFile(TblostItemFileDto.CreateServDto.builder()
+                    .tblostId(itemId)
+                    .fileName(fileName)
+                    .fileType(fileType)
+                    .fileOrder(fileOrder)
+                    .build()
+            );
+
+            return fileUrl;
+
+        } catch (IOException e) {
+            throw new FileUploadException("File upload failed: " + file.getOriginalFilename(), e);
+        }
+    }
+
 
     /**
      * 다중 파일 업로드
@@ -94,6 +135,26 @@ public class FirebaseService {
 
         return fileUrls;
     }
+
+    /**
+     * 파일 이름을 이용하여 storage 에서 삭제
+     *
+     * @param fileName 파일 이름
+     */
+    public void deleteFile(String fileName) {
+        try {
+            Blob blob = bucket.get(fileName);
+            if (blob != null) {
+                blob.delete();
+                log.info("✅ Deleted file from Firebase Storage: {}", fileName);
+            } else {
+                log.warn("⚠️ File not found in Firebase Storage: {}", fileName);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete file from Firebase Storage: " + fileName, e);
+        }
+    }
+
     /**
      * 파일 경로를 이용하여 signed URL을 생성
      *
