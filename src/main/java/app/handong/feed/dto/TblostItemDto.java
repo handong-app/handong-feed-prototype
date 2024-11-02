@@ -57,4 +57,31 @@ public class TblostItemDto {
         private String fileNames;
     }
 
+
+    @Schema(description = "분실물 수정 요청 DTO")
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateReqDto {
+        private String lostPersonName;
+        private String content;
+
+        public UpdateServDto toUpdateServDto(String id){
+            return UpdateServDto.builder().id(id).lostPersonName(this.lostPersonName).content(this.content).build();
+        }
+    }
+
+    @Schema(description = "분실물 수정 요청 DTO")
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateServDto {
+        private String id;
+        private String lostPersonName;
+        private String content;
+    }
 }
