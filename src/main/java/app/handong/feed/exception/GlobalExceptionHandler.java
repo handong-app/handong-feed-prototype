@@ -24,5 +24,11 @@ public class GlobalExceptionHandler {
                 .body(DefaultDto.IdResDto.builder().id(ex.getMessage()).build());
     }
 
+    @ExceptionHandler(NoMatchingDataException.class)
+    public ResponseEntity<DefaultDto.IdResDto> handleNoMatchingDataException(NoMatchingDataException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(DefaultDto.IdResDto.builder().id(ex.getMessage()).build());
+    }
+
 
 }
