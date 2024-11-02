@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface TblostItemMapper {
     TblostItemDto.DetailServDto getLostItemDetailById(@Param("itemId") String itemId);
-    List<TblostItemDto.AllServDto> getAllLostItems();
+    List<TblostItemDto.DetailServDto> getAllLostItems();
 }
