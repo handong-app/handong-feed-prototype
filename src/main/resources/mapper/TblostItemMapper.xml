@@ -9,7 +9,7 @@
             ti.lostPersonName AS lostPersonName,
             ti.content AS content,
             ti.createdAt AS createdAt,
-            tif.fileName AS fileName
+            GROUP_CONCAT(tif.fileName ORDER BY tif.FileOrder ASC) AS fileNames
         FROM
             mydb_TblostItem ti
                 LEFT JOIN
@@ -17,22 +17,15 @@
         WHERE
             ti.id = #{id}
     </select>
-    <resultMap id="lostItemResultMap" type="app.handong.feed.dto.TblostItemDto$DetailServDto">
-        <id property="id" column="id" />
-        <result property="lostPersonName" column="lostPersonName" />
-        <result property="content" column="content" />
-        <result property="createdAt" column="createdAt" />
-        <collection property="fileNames" ofType="string" column="fileName" />
-    </resultMap>
 
     <!-- 분실물 전체 조회 쿼리 -->
-    <select id="getAllLostItems" resultMap="allLostItemResultMap">
+    <select id="getAllLostItems" resultMap="lostItemResultMap">
         SELECT
             ti.id AS id,
             ti.lostPersonName AS lostPersonName,
             ti.content AS content,
             ti.createdAt AS createdAt,
-            GROUP_CONCAT(tif.fileName ORDER BY tif.fileName ASC) AS fileNames
+            GROUP_CONCAT(tif.fileName ORDER BY tif.fileOrder ASC) AS fileNames
         FROM
             mydb_TblostItem ti
                 LEFT JOIN
@@ -43,7 +36,7 @@
             ti.createdAt DESC
     </select>
 
-    <resultMap id="allLostItemResultMap" type="app.handong.feed.dto.TblostItemDto$AllServDto">
+    <resultMap id="lostItemResultMap" type="app.handong.feed.dto.TblostItemDto$DetailServDto">
         <id property="id" column="id" />
         <result property="lostPersonName" column="lostPersonName" />
         <result property="content" column="content" />
