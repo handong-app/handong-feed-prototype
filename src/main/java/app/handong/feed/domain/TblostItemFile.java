@@ -28,4 +28,8 @@ public class TblostItemFile extends AuditingFields {
     public static TblostItemFile of(String lostId, String fileName, String fileType, int fileOrder) {
         return new TblostItemFile(lostId, fileName, fileType, fileOrder);
     }
+
+    public void updateFileOrder(int fileOrder) {
+        this.fileOrder = fileOrder;
+    }
 }
