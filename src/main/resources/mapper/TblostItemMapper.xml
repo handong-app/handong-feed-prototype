@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.handong.feed.mapper.TblostItemMapper">
+
+    <!-- 분실물 상세 조회 쿼리 -->
+    <select id="getLostItemDetailById" resultMap="lostItemResultMap">
+        SELECT
+            ti.id AS id,
+            ti.lostPersonName AS lostPersonName,
+            ti.content AS content,
+            ti.createdAt AS createdAt,
+            tif.fileName AS fileName
+        FROM
+            mydb_TblostItem ti
+                LEFT JOIN
+            mydb_TblostItemFile tif ON ti.id = tif.tblostId
+        WHERE
+            ti.id = #{id}
+    </select>
+    <resultMap id="lostItemResultMap" type="app.handong.feed.dto.TblostItemDto$DetailServDto">
+        <id property="id" column="id" />
+        <result property="lostPersonName" column="lostPersonName" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="createdAt" />
+        <collection property="fileNames" ofType="string" column="fileName" />
+    </resultMap>
+
+</mapper>
