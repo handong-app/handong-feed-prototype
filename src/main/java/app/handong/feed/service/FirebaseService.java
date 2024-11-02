@@ -15,7 +15,11 @@ import com.google.firebase.cloud.StorageClient;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +49,27 @@ public class FirebaseService {
     }
 
     /**
+     * 파일 해시 생성 메서드 (16진수 인코딩)
+     *
+     * @param file 파일 경로 및 이름
+     * @return 파일 해시값
+     */
+    private String hashFileToHex(MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(inputStream.readAllBytes());
+            // 바이트 배열을 16진수 문자열로 변환
+            StringBuilder hexString = new StringBuilder(2 * hash.length);
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (IOException | NoSuchAlgorithmException e) {
+            throw new RuntimeException("파일 해싱 실패: " + file.getOriginalFilename(), e);
+        }
+    }
+
+    /**
      * 다중 파일 업로드
      *
      * @param files 업로드할 MultipartFile 목록
@@ -58,7 +83,9 @@ public class FirebaseService {
 
         for (MultipartFile file : files) {
             try {
-                String fileName = folder + "/" + itemId + "_" + index;
+                // 파일의 해시값을 생성하여 파일 이름에 추가
+                String fileHash = hashFileToHex(file);
+                String fileName = folder + "/" + itemId + "_" + fileHash;
                 Blob blob = bucket.create(fileName, file.getBytes(), file.getContentType());
 
                 long fileSize = blob.getSize();
@@ -75,9 +102,9 @@ public class FirebaseService {
                         .tblostId(itemId)
                         .fileName(fileName)
                         .fileType(fileType)
+                        .fileOrder(index)
                         .build()
                 );
-
                 index++;
             } catch (IOException e) {
                 throw new FileUploadException("File upload failed: " + file.getOriginalFilename(), e);
