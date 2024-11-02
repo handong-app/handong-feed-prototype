@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Operating Hours</title>
+    <style>
+        /* Basic styling for table and modal */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Restaurant Operating Hours</h2>
+
+<!-- Table to display restaurant information -->
+<table id="infoTable">
+    <thead>
+    <tr>
+        <th>식당</th>
+        <th>운영일</th>
+        <th>운영시간</th>
+        <th>브레이크타임</th>
+        <th>휴무일</th>
+        <th>비고</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+    <!-- Data rows will be added here by JavaScript -->
+    </tbody>
+</table>
+
+<button onclick="showCreateModal()">Create New Entry</button>
+
+<!-- Modal for Create and Update -->
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Create New Entry</h2>
+        <form id="entryForm">
+            <input type="hidden" id="tbInfo_id">
+            <label>식당 이름:</label>
+            <input type="text" id="InfoName" required><br><br>
+            <label>운영일:</label>
+            <input type="text" id="openDay" required><br><br>
+            <label>운영시간:</label>
+            <input type="text" id="openTime" required><br><br>
+            <label>브레이크타임:</label>
+            <input type="text" id="breakTime"><br><br>
+            <label>휴무일:</label>
+            <input type="text" id="breakDay"><br><br>
+            <label>비고:</label>
+            <input type="text" id="etc"><br><br>
+            <button type="button" onclick="submitEntry()">Save</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // Show the modal for creating a new entry
+    function showCreateModal() {
+        document.getElementById("entryForm").reset();
+        document.getElementById("tbInfo_id").value = "";
+        document.getElementById("modalTitle").textContent = "Create New Entry";
+        document.getElementById("entryModal").style.display = "block";
+    }
+
+    // Show the modal with existing data for updating
+    function showUpdateModal(info) {
+        document.getElementById("tbInfo_id").value = info.tbInfo_id;
+        document.getElementById("InfoName").value = info.InfoName;
+        document.getElementById("openDay").value = info.openDay;
+        document.getElementById("openTime").value = info.openTime;
+        document.getElementById("breakTime").value = info.breakTime;
+        document.getElementById("breakDay").value = info.breakDay;
+        document.getElementById("etc").value = info.etc;
+        document.getElementById("modalTitle").textContent = "Update Entry";
+        document.getElementById("entryModal").style.display = "block";
+    }
+
+    // Close the modal
+    function closeModal() {
+        document.getElementById("entryModal").style.display = "none";
+    }
+
+    // Submit the entry (Create or Update)
+    function submitEntry() {
+        const tbInfoId = document.getElementById("tbInfo_id").value;
+        const entryData = {
+            tbInfo_id: tbInfoId || null,
+            InfoName: document.getElementById("InfoName").value,
+            openDay: document.getElementById("openDay").value,
+            openTime: document.getElementById("openTime").value,
+            breakTime: document.getElementById("breakTime").value,
+            breakDay: document.getElementById("breakDay").value,
+            etc: document.getElementById("etc").value
+        };
+
+        // Determine if we are creating or updating
+        const url = tbInfoId ? "/api/tbuser/info/update" : "/api/tbuser/info/create";
+        const method = tbInfoId ? "PUT" : "POST";
+
+        $.ajax({
+            url: url,
+            type: method,
+            contentType: "application/json",
+            data: JSON.stringify(entryData),
+            success: function(response) {
+                closeModal();
+                loadTableData(); // Reload table data after update
+            },
+            error: function(xhr, status, error) {
+                alert("Error: " + xhr.status + "\nMessage: " + xhr.responseText);
+            }
+        });
+    }
+
+    // Load table data from the server
+    function loadTableData() {
+        $.ajax({
+            url: "/api/tbuser/info/read/all",
+            type: "GET",
+
+            success: function(data) {
+                const tableBody = document.getElementById("tableBody");
+                tableBody.innerHTML = "";
+                data.forEach(info => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                    <td>${info.InfoName}</td>
+                    <td>${info.openDay}</td>
+                    <td>${info.openTime}</td>
+                    <td>${info.breakTime}</td>
+                    <td>${info.breakDay}</td>
+                    <td>${info.etc}</td>
+                    <td>
+                        <button onclick='showUpdateModal(${JSON.stringify(info)})'>Update</button>
+                    </td>
+                `;
+                    tableBody.appendChild(row);
+                });
+            },
+            error: function(xhr, status, error) {
+                alert("Error loading data: " + xhr.status + "\nMessage: " + xhr.responseText);
+            }
+        });
+    }
+
+    // Initial load of table data
+    loadTableData();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // AJAX 요청으로 서버에 Google ID Token을 보냅니다
+            fetch('/api/tbuser/login/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({credential: response.credential})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response from server:", data);
+                    if (data.token) { // 서버로부터 토큰을 받으면
+                        // 토큰을 쿼리 파라미터로 현재 URL에 추가
+                        const currentUrl = window.location.href.split('?')[0]; // 기존 쿼리 파라미터 제거
+                        const newUrl = `${currentUrl}?token=${data.token}`; // 새로운 쿼리 파라미터 추가
+                        window.location.href = newUrl; // URL을 변경하고 페이지를 리로드
+                    } else {
+                        alert("Login failed: " + data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+<div id="g_id_onload"
+     data-client_id="542164017545-c6tsebe44kpkpk43b7u8njouir63oqq8.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large">
+</div>
+</body>
+</html>
