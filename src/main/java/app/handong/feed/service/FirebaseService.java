@@ -2,6 +2,7 @@ package app.handong.feed.service;
 
 import app.handong.feed.dto.TblostItemFileDto;
 import app.handong.feed.exception.FileUploadException;
+import app.handong.feed.util.Hasher;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import lombok.extern.slf4j.Slf4j;
@@ -48,26 +49,6 @@ public class FirebaseService {
                 + fileName.replaceAll("/", "%2F") + "?alt=media";
     }
 
-    /**
-     * 파일 해시 생성 메서드 (16진수 인코딩)
-     *
-     * @param file 파일 경로 및 이름
-     * @return 파일 해시값
-     */
-    private String hashFileToHex(MultipartFile file) {
-        try (InputStream inputStream = file.getInputStream()) {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(inputStream.readAllBytes());
-            // 바이트 배열을 16진수 문자열로 변환
-            StringBuilder hexString = new StringBuilder(2 * hash.length);
-            for (byte b : hash) {
-                hexString.append(String.format("%02x", b));
-            }
-            return hexString.toString();
-        } catch (IOException | NoSuchAlgorithmException e) {
-            throw new RuntimeException("파일 해싱 실패: " + file.getOriginalFilename(), e);
-        }
-    }
 
     /**
      * 다중 파일 업로드
@@ -84,7 +65,7 @@ public class FirebaseService {
         for (MultipartFile file : files) {
             try {
                 // 파일의 해시값을 생성하여 파일 이름에 추가
-                String fileHash = hashFileToHex(file);
+                String fileHash = Hasher.hashFileToHex(file);
                 String fileName = folder + "/" + itemId + "_" + fileHash;
                 Blob blob = bucket.create(fileName, file.getBytes(), file.getContentType());
 
