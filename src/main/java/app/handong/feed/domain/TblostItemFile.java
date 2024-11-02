@@ -16,14 +16,16 @@ public class TblostItemFile extends AuditingFields {
     private String tblostId;
     private String fileName;
     private String fileType;
+    private int fileOrder;
 
     protected TblostItemFile() {}
-    public TblostItemFile(String lostId, String fileName, String fileType) {
+    public TblostItemFile(String lostId, String fileName, String fileType, int fileOrder) {
         this.tblostId = lostId;
         this.fileName = fileName;
         this.fileType = fileType;
+        this.fileOrder = fileOrder;
     }
-    public static TblostItemFile of(String lostId, String fileName, String fileType) {
-        return new TblostItemFile(lostId, fileName, fileType);
+    public static TblostItemFile of(String lostId, String fileName, String fileType, int fileOrder) {
+        return new TblostItemFile(lostId, fileName, fileType, fileOrder);
     }
 }
