@@ -8,11 +8,14 @@ import app.handong.feed.repository.TblostItemRepository;
 import app.handong.feed.service.FirebaseService;
 import app.handong.feed.service.TblostItemService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TblostItemServiceImpl implements TblostItemService {
 
@@ -53,5 +56,31 @@ public class TblostItemServiceImpl implements TblostItemService {
                 .createdAt(detail.getCreatedAt())
                 .fileUrls(fileUrls)
                 .build();
+    }
+
+    @Override
+    public List<TblostItemDto.DetailResDto> getAllLostItems() {
+        List<TblostItemDto.AllServDto> lostItems = tblostItemMapper.getAllLostItems();
+
+
+        return lostItems.stream()
+                .map(item -> {
+                    log.info("{}",item.getFileNames());
+                    List<String> fileUrls = Arrays.stream(item.getFileNames().split(","))
+                            .map(fileName -> {
+                                log.info("{}", fileName);
+                                return firebaseService.generateFileUrl(fileName);
+                            })
+                            .toList();
+
+                    return TblostItemDto.DetailResDto.builder()
+                            .id(item.getId())
+                            .lostPersonName(item.getLostPersonName())
+                            .content(item.getContent())
+                            .createdAt(item.getCreatedAt())
+                            .fileUrls(fileUrls)
+                            .build();
+                })
+                .toList();
     }
 }

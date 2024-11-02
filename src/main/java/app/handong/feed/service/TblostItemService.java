@@ -12,4 +12,5 @@ public interface TblostItemService {
 
     TblostItemDto.CreateResDto createLostItem(TblostItemDto.CreateReqDto createReqDto, List<MultipartFile> files, String reqUserId);
     TblostItemDto.DetailResDto getLostItemDetail(DefaultDto.IdReqDto idReqDto);
+    List<TblostItemDto.DetailResDto> getAllLostItems();
 }
