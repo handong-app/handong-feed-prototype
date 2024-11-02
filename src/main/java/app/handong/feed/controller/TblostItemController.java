@@ -46,7 +46,7 @@ public class TblostItemController {
     }
 
     @Operation(summary = "분실물 조회",
-            description = "분실물 ID로 분실물 정보를 조회합니다. <br />"
+            description = "분실물 ID로 분실물 정보를 조회 <br />"
                     + "@param String lostId <br />"
                     + "@return HttpStatus.OK(200) ResponseEntity\\<TblostDto.DetailResDto\\> <br />"
                     + "@exception 404 Not Found (분실물을 찾을 수 없는 경우)"
@@ -59,15 +59,38 @@ public class TblostItemController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @Operation(summary = "분실물 전체 조회", description = "모든 분실물 정보를 조회합니다. <br />"
-            + "@param Long lostId <br />"
+    @Operation(summary = "분실물 전체 조회",
+            description = "모든 분실물 정보를 조회 <br />"
+            + "@param String lostId <br />"
             + "@return HttpStatus.OK(200) ResponseEntity\\<List<TblostItemDto.DetailResDto\\>\\> <br />"
             + "@exception 404 Not Found (분실물을 찾을 수 없는 경우)"
     )
     @GetMapping
     public ResponseEntity<List<TblostItemDto.DetailResDto>> getAllLostItems() {
         List<TblostItemDto.DetailResDto> response = tblostItemService.getAllLostItems();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "분실물 게시 수정",
+            description = "분실물 게시글을 수정 <br />"
+            + "@param String lostId <br />"
+            + "@return HttpStatus.OK(200) ResponseEntity\\<TblostDto.DetailResDto\\> <br />"
+            + "@exception 필수 파라미터 누락하였을 때 등 <br />"
+            + "@exception 403 Forbidden (글쓴이가 아닐 시) <br />"
+            + "@exception 404 Not Found (주제 또는 유저를 찾을 수 없는 경우) <br />"
+            + "@exception 400 Bad Request (필수 파라미터 누락 시)"
+    )
+    @PostMapping(value = "/update/{lostId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TblostItemDto.CreateResDto> updateLostItem(
+            @PathVariable("lostId") String lostId,
+            @RequestPart(value = "data") TblostItemDto.UpdateReqDto updateReqDto,
+            @RequestPart(value = "files") List<MultipartFile> files,
+            HttpServletRequest request){
+
+        String reqUserId = request.getAttribute("reqUserId").toString();
+        TblostItemDto.CreateResDto response = tblostItemService.updateLostItem(updateReqDto.toUpdateServDto(lostId), files, reqUserId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
