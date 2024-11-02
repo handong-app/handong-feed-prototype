@@ -25,4 +25,29 @@
         <collection property="fileNames" ofType="string" column="fileName" />
     </resultMap>
 
+    <!-- 분실물 전체 조회 쿼리 -->
+    <select id="getAllLostItems" resultMap="allLostItemResultMap">
+        SELECT
+            ti.id AS id,
+            ti.lostPersonName AS lostPersonName,
+            ti.content AS content,
+            ti.createdAt AS createdAt,
+            GROUP_CONCAT(tif.fileName ORDER BY tif.fileName ASC) AS fileNames
+        FROM
+            mydb_TblostItem ti
+                LEFT JOIN
+            mydb_TblostItemFile tif ON ti.id = tif.tblostId
+        GROUP BY
+            ti.id
+        ORDER BY
+            ti.createdAt DESC
+    </select>
+
+    <resultMap id="allLostItemResultMap" type="app.handong.feed.dto.TblostItemDto$AllServDto">
+        <id property="id" column="id" />
+        <result property="lostPersonName" column="lostPersonName" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="createdAt" />
+        <result property="fileNames" column="fileNames" />
+    </resultMap>
 </mapper>
