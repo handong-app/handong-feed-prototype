@@ -17,9 +17,10 @@ public class TblostItemFileDto {
         private String tblostId;
         private String fileName;
         private String fileType;
+        private Integer fileOrder;
 
         public TblostItemFile toEntity() {
-            return TblostItemFile.of(tblostId, fileName, fileType);
+            return TblostItemFile.of(tblostId, fileName, fileType, fileOrder);
         }
     }
 
