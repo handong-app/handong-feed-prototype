@@ -26,6 +26,11 @@ public class TblostItem extends AuditingFields {
         return new TblostItem(userId, lostPersonName, content);
     }
 
+    public void update(String lostPersonName, String content) {
+        this.lostPersonName = lostPersonName;
+        this.content = content;
+    }
+
     public TblostItemDto.CreateResDto toCreateResDto() {
         return TblostItemDto.CreateResDto.builder().id(this.getId()).build();
     }
