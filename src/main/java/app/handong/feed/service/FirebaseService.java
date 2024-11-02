@@ -38,7 +38,7 @@ public class FirebaseService {
      * @param fileName 파일 경로 및 이름
      * @return Firebase Storage에 접근 가능한 파일 URL
      */
-    private String generateFileUrl(String fileName) {
+    public String generateFileUrl(String fileName) {
         return "https://firebasestorage.googleapis.com/v0/b/"
                 + bucket.getName() + "/o/"
                 + fileName.replaceAll("/", "%2F") + "?alt=media";
