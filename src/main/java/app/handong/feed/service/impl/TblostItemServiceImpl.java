@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -29,6 +30,7 @@ public class TblostItemServiceImpl implements TblostItemService {
         this.firebaseService = firebaseService;
     }
 
+    @Override
     @Transactional
     public TblostItemDto.CreateResDto createLostItem(TblostItemDto.CreateReqDto createReqDto, List<MultipartFile> files, String reqUserId) {
         TblostItem tblostItem = TblostItem.of(reqUserId, createReqDto.getLostPersonName(), createReqDto.getContent());
@@ -45,41 +47,43 @@ public class TblostItemServiceImpl implements TblostItemService {
     @Override
     public TblostItemDto.DetailResDto getLostItemDetail(DefaultDto.IdReqDto idReqDto) {
         TblostItemDto.DetailServDto detail = tblostItemMapper.getLostItemDetailById(idReqDto.getId());
-        List<String> fileUrls = detail.getFileNames().stream()
-                .map(firebaseService::generateFileUrl)
-                .toList();
+        if (detail == null) {
+            throw new NoSuchElementException("해당 분실물 없음");
+        }
 
         return TblostItemDto.DetailResDto.builder()
                 .id(detail.getId())
                 .lostPersonName(detail.getLostPersonName())
                 .content(detail.getContent())
                 .createdAt(detail.getCreatedAt())
-                .fileUrls(fileUrls)
+                .fileUrls(getFileUrls(detail))
                 .build();
     }
 
     @Override
     public List<TblostItemDto.DetailResDto> getAllLostItems() {
-        List<TblostItemDto.AllServDto> lostItems = tblostItemMapper.getAllLostItems();
-
+        List<TblostItemDto.DetailServDto> lostItems = tblostItemMapper.getAllLostItems();
 
         return lostItems.stream()
-                .map(item -> {
-                    log.info("{}",item.getFileNames());
-                    List<String> fileUrls = Arrays.stream(item.getFileNames().split(","))
-                            .map(fileName -> {
-                                log.info("{}", fileName);
-                                return firebaseService.generateFileUrl(fileName);
-                            })
-                            .toList();
+                .map(this::buildDetailResDto)
+                .toList();
+    }
 
-                    return TblostItemDto.DetailResDto.builder()
-                            .id(item.getId())
-                            .lostPersonName(item.getLostPersonName())
-                            .content(item.getContent())
-                            .createdAt(item.getCreatedAt())
-                            .fileUrls(fileUrls)
-                            .build();
+    private TblostItemDto.DetailResDto buildDetailResDto(TblostItemDto.DetailServDto item) {
+        return TblostItemDto.DetailResDto.builder()
+                .id(item.getId())
+                .lostPersonName(item.getLostPersonName())
+                .content(item.getContent())
+                .createdAt(item.getCreatedAt())
+                .fileUrls(getFileUrls(item))
+                .build();
+    }
+
+    private List<String> getFileUrls(TblostItemDto.DetailServDto detail) {
+        return Arrays.stream(detail.getFileNames().split(","))
+                .map(fileName -> {
+                    log.info("{}", fileName);
+                    return firebaseService.generateFileUrl(fileName);
                 })
                 .toList();
     }
