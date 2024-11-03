@@ -43,4 +43,11 @@
         <result property="createdAt" column="createdAt" />
         <result property="fileNames" column="fileNames" />
     </resultMap>
+
+    <!-- 분실물 작성자 조회 쿼리 -->
+    <select id="getAuthorIdByItemId" resultType="app.handong.feed.dto.DefaultDto$IdResDto">
+        SELECT ti.userId AS id
+        FROM mydb_TblostItem ti
+        WHERE ti.id = #{id}
+    </select>
 </mapper>
