@@ -1,5 +1,6 @@
 package app.handong.feed.service.impl;
 
+import app.handong.feed.constants.Permission;
 import app.handong.feed.domain.TblostItem;
 import app.handong.feed.domain.TblostItemFile;
 import app.handong.feed.dto.DefaultDto;
@@ -10,6 +11,7 @@ import app.handong.feed.mapper.TblostItemMapper;
 import app.handong.feed.repository.TblostItemFileRepository;
 import app.handong.feed.repository.TblostItemRepository;
 import app.handong.feed.service.FirebaseService;
+import app.handong.feed.service.TbadminService;
 import app.handong.feed.service.TblostItemService;
 import app.handong.feed.util.Hasher;
 import jakarta.transaction.Transactional;
@@ -28,12 +30,14 @@ public class TblostItemServiceImpl implements TblostItemService {
     private final TblostItemFileRepository tblostItemFileRepository;
     private final TblostItemMapper tblostItemMapper;
     private final FirebaseService firebaseService;
+    private final TbadminService tbadminService;
 
-    public TblostItemServiceImpl(TblostItemRepository tblostRepository, TblostItemFileRepository tblostItemFileRepository, TblostItemMapper tblostItemMapper, FirebaseService firebaseService) {
+    public TblostItemServiceImpl(TblostItemRepository tblostRepository, TblostItemFileRepository tblostItemFileRepository, TblostItemMapper tblostItemMapper, FirebaseService firebaseService, TbadminService tbadminService) {
         this.tblostItemRepository = tblostRepository;
         this.tblostItemFileRepository = tblostItemFileRepository;
         this.tblostItemMapper = tblostItemMapper;
         this.firebaseService = firebaseService;
+        this.tbadminService = tbadminService;
     }
 
     @Override
@@ -169,12 +173,24 @@ public class TblostItemServiceImpl implements TblostItemService {
 
     @Override
     @Transactional
-    public void deleteLostItem(DefaultDto.IdReqDto idReqDto, String reqUserId){
+    public void deleteLostItemUser(DefaultDto.IdReqDto idReqDto, String reqUserId){
         throwIfNotExist(idReqDto.getId());
         throwIfNotAuthor(idReqDto.getId(), reqUserId);
+        processDeleteLostItem(idReqDto.getId());
+    }
+
+    @Override
+    @Transactional
+    public void deleteLostItemAdmin(DefaultDto.IdReqDto idReqDto, String reqUserId){
+        tbadminService.throwIfNotAdmin(reqUserId, Permission.ADMIN_DELETE_FEED);
+        throwIfNotExist(idReqDto.getId());
+        processDeleteLostItem(idReqDto.getId());
+    }
+
+    private void processDeleteLostItem(String itemId){
 
         // 1. 분실물 아이템에 연결된 모든 파일 불러오기
-        List<TblostItemFile> itemFiles = tblostItemFileRepository.findByTblostId(idReqDto.getId());
+        List<TblostItemFile> itemFiles = tblostItemFileRepository.findByTblostId(itemId);
 
         // 2. 파일을 Firebase와 데이터베이스에서 삭제
         for (TblostItemFile file : itemFiles) {
@@ -183,7 +199,7 @@ public class TblostItemServiceImpl implements TblostItemService {
         }
 
         // 3. tblostItem 데이터베이스에서 삭제
-        TblostItem tblostItem = tblostItemRepository.findById(idReqDto.getId())
+        TblostItem tblostItem = tblostItemRepository.findById(itemId)
                 .orElseThrow(() -> new NoMatchingDataException("삭제할 분실물 아이템이 없습니다."));
         tblostItemRepository.delete(tblostItem);
     }
@@ -199,4 +215,5 @@ public class TblostItemServiceImpl implements TblostItemService {
             throw new NoAuthorizationException("삭제할 권한이 없습니다.");
         }
     }
+
 }

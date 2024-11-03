@@ -14,5 +14,6 @@ public interface TblostItemService {
     TblostItemDto.DetailResDto getLostItemDetail(DefaultDto.IdReqDto idReqDto);
     List<TblostItemDto.DetailResDto> getAllLostItems();
     TblostItemDto.CreateResDto updateLostItem(TblostItemDto.UpdateServDto updateServDto, List<MultipartFile> files, String reqUserId);
-    void deleteLostItem(DefaultDto.IdReqDto idReqDto, String reqUserId);
+    void deleteLostItemUser(DefaultDto.IdReqDto idReqDto, String reqUserId);
+    void deleteLostItemAdmin(DefaultDto.IdReqDto idReqDto, String reqUserId);
 }
