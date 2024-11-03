@@ -4,6 +4,7 @@ import app.handong.feed.domain.TblostItem;
 import app.handong.feed.domain.TblostItemFile;
 import app.handong.feed.dto.DefaultDto;
 import app.handong.feed.dto.TblostItemDto;
+import app.handong.feed.exception.NoAuthorizationException;
 import app.handong.feed.exception.NoMatchingDataException;
 import app.handong.feed.mapper.TblostItemMapper;
 import app.handong.feed.repository.TblostItemFileRepository;
@@ -100,16 +101,14 @@ public class TblostItemServiceImpl implements TblostItemService {
     @Override
     @Transactional
     public TblostItemDto.CreateResDto updateLostItem(TblostItemDto.UpdateServDto updateServDto, List<MultipartFile> files, String reqUserId) {
-        String lostId = updateServDto.getId();
+        String lostItemId = updateServDto.getId();
 
-        /*
-         TODO
-         대상 item 있는지 확인 (throwIfNotExist)
-         권한 있는지 확인 (throwIfNotAuthor)
-        */
+        // 0. 존제여부와 권한 확인
+        throwIfNotExist(lostItemId);
+        throwIfNotAuthor(lostItemId,reqUserId);
 
         // 1. 기존 파일 불러오기
-        List<TblostItemFile> existingFiles = tblostItemFileRepository.findByTblostId(lostId);
+        List<TblostItemFile> existingFiles = tblostItemFileRepository.findByTblostId(lostItemId);
         Set<String> existingFileHashes = existingFiles.stream()
                 .map(TblostItemFile::getFileName)
                 .collect(Collectors.toSet());
@@ -128,7 +127,7 @@ public class TblostItemServiceImpl implements TblostItemService {
             int fileOrder = 1;
             for (MultipartFile file : validFiles) {
                 String hash = Hasher.hashFileToHex(file);
-                String fileName = "LostItem/" + lostId + "_" + hash;
+                String fileName = "LostItem/" + lostItemId + "_" + hash;
 
                 if (existingFileHashes.contains(fileName)) {
                     // 중복된 파일이 존재할 경우 기존 파일 유지 및 순서 업데이트
@@ -142,7 +141,7 @@ public class TblostItemServiceImpl implements TblostItemService {
                     fileUrls.add(firebaseService.generateFileUrl(fileName));
                 } else {
                     // 중복되지 않은 새 파일을 업로드 및 데이터베이스에 추가
-                    String fileUrl = firebaseService.uploadFile(file, "LostItem", lostId, fileOrder);
+                    String fileUrl = firebaseService.uploadFile(file, "LostItem", lostItemId, fileOrder);
                     fileUrls.add(fileUrl);
                 }
                 fileOrder++;
@@ -158,7 +157,7 @@ public class TblostItemServiceImpl implements TblostItemService {
         }
 
         // 5. 분실물 정보 업데이트
-        TblostItem tblostItem = tblostItemRepository.findById(lostId).orElseThrow(() -> new NoMatchingDataException("Lost item not found"));
+        TblostItem tblostItem = tblostItemRepository.findById(lostItemId).orElseThrow(() -> new NoMatchingDataException("Lost item not found"));
         tblostItem.update(updateServDto.getLostPersonName(), updateServDto.getContent());
         tblostItemRepository.save(tblostItem);
 
@@ -166,5 +165,38 @@ public class TblostItemServiceImpl implements TblostItemService {
                 .id(tblostItem.getId())
                 .fileUrls(fileUrls)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void deleteLostItem(DefaultDto.IdReqDto idReqDto, String reqUserId){
+        throwIfNotExist(idReqDto.getId());
+        throwIfNotAuthor(idReqDto.getId(), reqUserId);
+
+        // 1. 분실물 아이템에 연결된 모든 파일 불러오기
+        List<TblostItemFile> itemFiles = tblostItemFileRepository.findByTblostId(idReqDto.getId());
+
+        // 2. 파일을 Firebase와 데이터베이스에서 삭제
+        for (TblostItemFile file : itemFiles) {
+            firebaseService.deleteFile(file.getFileName());
+            tblostItemFileRepository.delete(file);
+        }
+
+        // 3. tblostItem 데이터베이스에서 삭제
+        TblostItem tblostItem = tblostItemRepository.findById(idReqDto.getId())
+                .orElseThrow(() -> new NoMatchingDataException("삭제할 분실물 아이템이 없습니다."));
+        tblostItemRepository.delete(tblostItem);
+    }
+
+    private void throwIfNotExist(String itemId){
+        if (!tblostItemRepository.existsTblostItemById(itemId))
+            throw new NoMatchingDataException("대상 분실물이 존제하지 않습니다.");
+    }
+
+    private void throwIfNotAuthor(String itemId, String reqUserId) {
+        String authorUserId = tblostItemMapper.getAuthorIdByItemId(itemId).getId();
+        if (!reqUserId.equals(authorUserId)) {
+            throw new NoAuthorizationException("삭제할 권한이 없습니다.");
+        }
     }
 }
