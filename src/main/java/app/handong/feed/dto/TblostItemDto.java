@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TblostItemDto {
@@ -29,7 +30,7 @@ public class TblostItemDto {
         private List<String> fileUrls;
     }
 
-    @Schema(description = "분실물 상세 조회 응답 DTO")
+    @Schema(description = "분실물 조회 응답 DTO")
     @Getter
     @Setter
     @Builder
@@ -40,7 +41,8 @@ public class TblostItemDto {
         private String lostPersonName;
         private String content;
         private LocalDateTime createdAt;
-        private List<String> fileUrls;
+        @Builder.Default
+        private List<String> fileUrls = new ArrayList<>();
     }
 
     @Schema(description = "분실물 조회 서비스 DTO")
@@ -73,7 +75,7 @@ public class TblostItemDto {
         }
     }
 
-    @Schema(description = "분실물 수정 요청 DTO")
+    @Schema(description = "분실물 수정 서비스 DTO")
     @Getter
     @Setter
     @Builder
