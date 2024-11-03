@@ -93,19 +93,36 @@ public class TblostItemController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @Operation(summary = "분실물 삭제",
-            description = "분실물 아이템을 삭제합니다. <br />"
+    @Operation(summary = "분실물 삭제 유저용",
+            description = "작성자 확인 후 분실물 아이템을 삭제합니다. <br />"
                     + "@param String lostId <br />"
                     + "@return HttpStatus.OK(200) <br />"
                     + "@exception 404 Not Found (분실물을 찾을 수 없는 경우) <br />"
                     + "@exception 403 Forbidden (삭제 권한이 없는 경우)")
     @DeleteMapping("/{lostId}")
-    public ResponseEntity<Void> deleteLostItem(
+    public ResponseEntity<Void> deleteLostItemUser(
             @PathVariable("lostId") String lostId,
             HttpServletRequest request) {
 
         String reqUserId = request.getAttribute("reqUserId").toString();
-        tblostItemService.deleteLostItem(DefaultDto.IdReqDto.builder().id(lostId).build(), reqUserId);
+        tblostItemService.deleteLostItemUser(DefaultDto.IdReqDto.builder().id(lostId).build(), reqUserId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Operation(summary = "분실물 삭제 관리자용",
+            description = "관리자 권한 확인 후분실물 아이템을 삭제합니다. <br />"
+                    + "@param String lostId <br />"
+                    + "@return HttpStatus.OK(200) <br />"
+                    + "@exception 404 Not Found (분실물을 찾을 수 없는 경우) <br />"
+                    + "@exception 403 Forbidden (삭제 권한이 없는 경우)")
+    @DeleteMapping("/admin/{lostId}")
+    public ResponseEntity<Void> deleteLostItemAdmin(
+            @PathVariable("lostId") String lostId,
+            HttpServletRequest request) {
+
+        String reqUserId = request.getAttribute("reqUserId").toString();
+        tblostItemService.deleteLostItemAdmin(DefaultDto.IdReqDto.builder().id(lostId).build(), reqUserId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
