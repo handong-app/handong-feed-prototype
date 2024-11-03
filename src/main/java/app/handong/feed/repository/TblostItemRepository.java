@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TblostItemRepository extends JpaRepository<TblostItem, String> {
+    boolean existsTblostItemById(String id);
 }
