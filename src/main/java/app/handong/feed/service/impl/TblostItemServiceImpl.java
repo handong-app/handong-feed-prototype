@@ -53,7 +53,7 @@ public class TblostItemServiceImpl implements TblostItemService {
     public TblostItemDto.DetailResDto getLostItemDetail(DefaultDto.IdReqDto idReqDto) {
         TblostItemDto.DetailServDto detail = tblostItemMapper.getLostItemDetailById(idReqDto.getId());
         if (detail == null) {
-            throw new NoSuchElementException("해당 분실물 없음");
+            throw new NoMatchingDataException("대상 분실물이 존제하지 않습니다.");
         }
 
         return TblostItemDto.DetailResDto.builder()
@@ -85,6 +85,10 @@ public class TblostItemServiceImpl implements TblostItemService {
     }
 
     private List<String> getFileUrls(TblostItemDto.DetailServDto detail) {
+        if (detail.getFileNames() == null || detail.getFileNames().isEmpty()) {
+            return Collections.emptyList();
+        }
+
         return Arrays.stream(detail.getFileNames().split(","))
                 .map(fileName -> {
                     log.info("{}", fileName);
@@ -97,6 +101,12 @@ public class TblostItemServiceImpl implements TblostItemService {
     @Transactional
     public TblostItemDto.CreateResDto updateLostItem(TblostItemDto.UpdateServDto updateServDto, List<MultipartFile> files, String reqUserId) {
         String lostId = updateServDto.getId();
+
+        /*
+         TODO
+         대상 item 있는지 확인 (throwIfNotExist)
+         권한 있는지 확인 (throwIfNotAuthor)
+        */
 
         // 1. 기존 파일 불러오기
         List<TblostItemFile> existingFiles = tblostItemFileRepository.findByTblostId(lostId);
