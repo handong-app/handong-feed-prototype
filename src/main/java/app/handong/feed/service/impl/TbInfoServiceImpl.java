@@ -2,6 +2,7 @@ package app.handong.feed.service.impl;
 
 
 
+import app.handong.feed.domain.TbInfo;
 import app.handong.feed.dto.TbInfoDto;
 import app.handong.feed.repository.TbInfoRepository;
 import app.handong.feed.service.TbInfoService;
@@ -24,8 +25,8 @@ public class TbInfoServiceImpl implements TbInfoService {
 
     @Override
     public TbInfoDto.InfoCreateReqDto createInfo(TbInfoDto.InfoCreateReqDto param){
-//        return tbInfoRepository.save(param.toEntity()).toCreateResDto();
-        return tbInfoRepository.save(param.toEntity()).toCreateResDto();
+        TbInfo savedInfo = tbInfoRepository.save(param.toEntity());
+        return savedInfo.toCreateResDto();
     }
 
     @Override

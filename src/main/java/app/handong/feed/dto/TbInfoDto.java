@@ -17,7 +17,7 @@ public class TbInfoDto {
         public static class InfoCreateReqDto {
             @Schema(description = "게시판 종류", example = "101")
             @NotNull
-            private Integer tbInfo_id;
+            private Integer tbInfoId;
 
             @Schema(description = "고유 식별 아이디", example = "12345")
             @NotNull
@@ -38,23 +38,23 @@ public class TbInfoDto {
             @Schema(description = "기타 정보", example = "No holidays")
             private String etc;
 
-            @Schema(description = "생성 시간", example = "2024-10-30T01:13:03")
-            private LocalDateTime createdAt;
+//            @Schema(description = "생성 시간", example = "2024-10-30T01:13:03")
+//            private LocalDateTime createdAt;
 
             @Schema(description = "수정 유지 이름", example = "Admin")
-            private String userName;
+            private String username;
 
             public TbInfo toEntity() {
                 return TbInfo.of(
-                        this.tbInfo_id,
+                        this.tbInfoId,
                         this.uid,
                         this.openDay,
                         this.openTime,
                         this.breakTime,
                         this.breakDay,
                         this.etc,
-                        this.userName,
-                        this.createdAt
+                        this.username
+//                        this.createdAt
                 );
             }
         }
@@ -69,7 +69,7 @@ public class TbInfoDto {
         @NoArgsConstructor
         public static class InfoResponseDto {
             @Schema(description = "게시판 종류", example = "101")
-            private Integer tbInfo_id;
+            private Integer tbInfoId;
 
             @Schema(description = "고유 식별 아이디", example = "12345")
             private String uid;
@@ -93,7 +93,7 @@ public class TbInfoDto {
             private LocalDateTime createdAt;
 
             @Schema(description = "수정 유지 이름", example = "Admin")
-            private String userName;
+            private String username;
         }
 
 

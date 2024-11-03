@@ -20,7 +20,7 @@ public class TbInfo {
     private String uid; // 고유 식별 아이디
 
     @Column
-    private Integer tbInfo_id;
+    private Integer tbInfoId;
 
     @Column
     private String openDay; // 운영일
@@ -51,8 +51,8 @@ public class TbInfo {
     }
 
     // 생성자
-    public TbInfo(Integer tbInfo_id, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username, LocalDateTime createdAt) {
-        this.tbInfo_id = tbInfo_id;
+    public TbInfo(Integer tbInfoId, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username) {
+        this.tbInfoId = tbInfoId;
         this.uid = uid;
         this.openDay = openDay;
         this.openTime = openTime;
@@ -60,11 +60,11 @@ public class TbInfo {
         this.breakDay = breakDay;
         this.etc = etc;
         this.username = username;
-        this.createdAt = createdAt;
+//        this.createdAt = createdAt;
     }
 
-    public static TbInfo of(Integer tbInfo_id, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username, LocalDateTime createdAt) {
-        return new TbInfo(tbInfo_id, uid, openDay, openTime, breakTime, breakDay, etc, username, createdAt);
+    public static TbInfo of(Integer tbInfoId, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username) {
+        return new TbInfo(tbInfoId, uid, openDay, openTime, breakTime, breakDay, etc, username);
     }
 
     @PrePersist
@@ -75,6 +75,15 @@ public class TbInfo {
     }
 
     public TbInfoDto.InfoCreateReqDto toCreateResDto() {
-        return TbInfoDto.InfoCreateReqDto.builder().uid(this.getUid()).build();
+        return TbInfoDto.InfoCreateReqDto.builder()
+                .tbInfoId(this.tbInfoId)
+                .uid(this.uid)
+                .openDay(this.openDay)
+                .openTime(this.openTime)
+                .breakTime(this.breakTime)
+                .breakDay(this.breakDay)
+                .etc(this.etc)
+                .username(this.username)
+                .build();
     }
 }
