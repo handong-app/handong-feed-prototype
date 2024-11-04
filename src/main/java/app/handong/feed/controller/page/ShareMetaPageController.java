@@ -30,6 +30,7 @@ public class ShareMetaPageController {
             model.addAttribute("imageUrl", detail.getFiles().get(0));
         else model.addAttribute("imageUrl", "https://feed.handong.app/og-image.jpg");
         model.addAttribute("finalUrl", "https://feed.handong.app/kafeed/" + detail.getId());
+        model.addAttribute("hashUrl", "https://feed.handong.app/k/" + hash);
         return "sharemeta.html";
     }
 
