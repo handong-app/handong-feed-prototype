@@ -17,14 +17,6 @@ public class DefaultInterceptor implements HandlerInterceptor {
     //컨트롤러 진입 전에 호출되는 메서드
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info("preHandle / request [{}]", request);
-        /*request.setAttribute("reqTest", "done");
-        response.setHeader("resTest", "done1");
-        logger.info("preHandle / reqTest [{}]", request.getAttribute("reqTest"));
-        logger.info("preHandle / resTest [{}]", response.getHeader("resTest"));
-        */
-        //logger.info("preHandle / refreshToken [{}]", request.getHeader("refreshToken"));
-        logger.info("preHandle / accessToken [{}]", request.getHeader("Authorization"));
         if (request.getHeader("Authorization") != null) {
             TokenFactory tokenFactory = new TokenFactory();
             String reqUserId = tokenFactory.verifyToken(request.getHeader("Authorization").replaceAll("Bearer ", ""));
@@ -36,18 +28,22 @@ public class DefaultInterceptor implements HandlerInterceptor {
 
         String requestURI = request.getRequestURI();
         String requestMethod = request.getMethod();
+        String ipAddr = request.getHeader("X-Forwarded-For");
+        if (ipAddr == null || ipAddr.isEmpty()) {
+            ipAddr = request.getRemoteAddr();
+        }
+        logger.info("preHandle [{} {}] : {} / {}", requestMethod, requestURI, ipAddr, request.getAttribute("reqUserId"));
         return true;
     }
 
     //컨트롤러 실행 후에 호출되는 메서드
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        logger.info("postHandle / request [{}]", request);
+//        logger.info("postHandle / request [{}]", request);
     }
 
     //모든것을 마친 후 실행되는 메서드
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        logger.info("afterCompletion / request [{}]", request);
     }
 }

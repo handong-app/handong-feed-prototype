@@ -71,8 +71,8 @@ public class TokenFactory {
         String due = arrayVal[1];
         NowDate nowDate = new NowDate();
         String now = nowDate.getNow();
-        System.out.println("due : " + due);
-        System.out.println("now : " + now);
+//        System.out.println("due : " + due);
+//        System.out.println("now : " + now);
 
         String[] arrayNow = {due, now};
         Arrays.sort(arrayNow);
