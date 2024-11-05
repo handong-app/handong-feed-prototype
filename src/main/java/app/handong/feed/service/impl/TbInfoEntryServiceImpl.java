@@ -32,6 +32,13 @@ public class TbInfoEntryServiceImpl implements TbInfoEntryService {
     }
 
     @Override
+    public TbInfoEntryDto.InfoEntryCreateReqDto readInfo(int tbinfoid) {
+        TbInfoEntry tbInfoEntry = tbInfoEntryRepository.findByTbInfoId(tbinfoid)
+                .orElseThrow(() -> new RuntimeException("No data found with tbInfoId: " + tbinfoid));
+        return new TbInfoEntryDto.InfoEntryCreateReqDto(tbInfoEntry);
+    }
+
+    @Override
     public TbInfoEntryDto.InfoEntryCreateReqDto updateInfo(TbInfoEntryDto.InfoEntryCreateReqDto param) {
         TbInfoEntry tbInfoEntry = tbInfoEntryRepository.findByTbInfoId(param.getTbInfoId())
                 .orElseThrow(() -> new RuntimeException("No data found with tbInfoId: " + param.getTbInfoId()));

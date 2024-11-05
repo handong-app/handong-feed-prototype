@@ -2,6 +2,8 @@ package app.handong.feed.controller;
 
 
 import app.handong.feed.dto.TbInfoDto;
+import app.handong.feed.dto.TbInfoEntryDto;
+import app.handong.feed.repository.TbInfoEntryRepository;
 import app.handong.feed.service.TbInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -16,6 +18,7 @@ public class TbInfoController {
     @Autowired
     private final TbInfoService tbInfoService;
 
+
     @Autowired
     public TbInfoController(TbInfoService tbInfoService) {
         this.tbInfoService = tbInfoService;
@@ -26,6 +29,7 @@ public class TbInfoController {
         TbInfoDto.InfoCreateReqDto createdInfo = tbInfoService.createInfo(param);
         return new ResponseEntity<>(createdInfo, HttpStatus.CREATED);
     }
+
     @GetMapping("/read/{uid}")
     public ResponseEntity<TbInfoDto.InfoCreateReqDto> readInfo(@PathVariable String uid) {
         try {
