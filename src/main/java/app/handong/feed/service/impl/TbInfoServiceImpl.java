@@ -6,6 +6,7 @@ import app.handong.feed.domain.TbInfo;
 import app.handong.feed.dto.TbInfoDto;
 import app.handong.feed.repository.TbInfoRepository;
 import app.handong.feed.service.TbInfoService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,4 +34,24 @@ public class TbInfoServiceImpl implements TbInfoService {
     public TbInfoDto.InfoCreateReqDto getInfo_Id(String uid){
         return tbInfoRepository.findByUid(uid).toCreateResDto();
     }
+
+    @Override
+    public TbInfoDto.InfoCreateReqDto updateInfo(String uid, TbInfoDto.InfoCreateReqDto param) {
+
+        TbInfo existingInfo = tbInfoRepository.findByUid(uid);
+        if (existingInfo == null) {
+            throw new EntityNotFoundException("UID가 " + uid + "인 정보를 찾을 수 없습니다.");
+        }
+
+
+        existingInfo.updateFields(param);
+
+
+        TbInfo updatedInfo = tbInfoRepository.save(existingInfo);
+
+
+        return updatedInfo.toCreateResDto();
+    }
+
+
 }

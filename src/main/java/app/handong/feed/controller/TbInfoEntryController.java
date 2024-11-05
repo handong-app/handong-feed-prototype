@@ -2,14 +2,17 @@ package app.handong.feed.controller;
 
 
 import app.handong.feed.domain.TbInfoEntry;
+import app.handong.feed.dto.TbInfoDto;
 import app.handong.feed.dto.TbInfoEntryDto;
 import app.handong.feed.repository.TbInfoEntryRepository;
 import app.handong.feed.service.TbInfoEntryService;
+import app.handong.feed.service.TbInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,14 +20,18 @@ import java.util.Optional;
 @RestController
 public class TbInfoEntryController {
 
+
     private final TbInfoEntryService tbInfoEntryService;
     private final TbInfoEntryRepository tbInfoEntryRepository;
+
+
 
 
     @Autowired
     public TbInfoEntryController(TbInfoEntryService tbInfoEntryService, TbInfoEntryRepository tbInfoEntryRepository) {
         this.tbInfoEntryService = tbInfoEntryService;
         this.tbInfoEntryRepository = tbInfoEntryRepository;
+
     }
 
     @PostMapping("/create")
@@ -33,30 +40,20 @@ public class TbInfoEntryController {
         return new ResponseEntity<>(createdInfo, HttpStatus.CREATED);
     }
 
-    @PostMapping("/read/{tbinfoid}")
-    public Optional<TbInfoEntry> readInfoEntry(@PathVariable int tbinfoid) {
-        // Retrieve the TbInfoEntry from the repository, handling Optional
-        Optional<TbInfoEntry> createdInfoOpt = tbInfoEntryRepository.findByTbInfoId(tbinfoid);
-        // Check if the entry is present, and return either the data or a NOT_FOUND response
+    @GetMapping("/read/{tbinfoid}")
+    public TbInfoEntry readInfoEntry(@PathVariable int tbinfoid) {
+        TbInfoEntry createdInfoOpt = tbInfoEntryRepository.findByTbInfoId(tbinfoid);
         return createdInfoOpt;
     }
-    @GetMapping("/read/all")
-    public ResponseEntity<List<TbInfoEntry>> readAllInfoEntries() {
-        List<TbInfoEntry> infoEntries = tbInfoEntryRepository.findAll();
-        if (infoEntries.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(infoEntries, HttpStatus.OK);
+
+    @PutMapping("/update/{tbinfoid}")
+    public TbInfoEntry readInfoEntry(@PathVariable int tbinfoid, @RequestBody TbInfoEntryDto.InfoEntryCreateReqDto param) {
+        TbInfoEntry createdInfoOpt = tbInfoEntryService.updateInfo(tbinfoid, param).toEntity();
+        return createdInfoOpt;
     }
 
 
 
-    @PutMapping("/update")
-    public ResponseEntity<TbInfoEntryDto.InfoEntryCreateReqDto> updateInfoEntry(@RequestBody TbInfoEntryDto.InfoEntryCreateReqDto param) {
-
-        TbInfoEntryDto.InfoEntryCreateReqDto createdInfo = tbInfoEntryService.updateInfo(param);
-        return new ResponseEntity<>(createdInfo, HttpStatus.CREATED);
-    }
 
 
 

@@ -38,8 +38,8 @@ public class TbInfoDto {
             @Schema(description = "기타 정보", example = "No holidays")
             private String etc;
 
-//            @Schema(description = "생성 시간", example = "2024-10-30T01:13:03")
-//            private LocalDateTime createdAt;
+            @Schema(description = "생성 시간", example = "2024-10-30T01:13:03")
+            private LocalDateTime createdAt;
 
             @Schema(description = "수정 유지 이름", example = "Admin")
             private String username;
@@ -53,8 +53,8 @@ public class TbInfoDto {
                         this.breakTime,
                         this.breakDay,
                         this.etc,
-                        this.username
-//                        this.createdAt
+                        this.username,
+                        this.createdAt
                 );
             }
         }
@@ -94,6 +94,8 @@ public class TbInfoDto {
 
             @Schema(description = "수정 유지 이름", example = "Admin")
             private String username;
+
+
         }
 
 

@@ -5,6 +5,7 @@ import app.handong.feed.domain.TbInfoEntry;
 import app.handong.feed.dto.TbInfoEntryDto;
 import app.handong.feed.repository.TbInfoEntryRepository;
 import app.handong.feed.service.TbInfoEntryService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,18 +32,12 @@ public class TbInfoEntryServiceImpl implements TbInfoEntryService {
         return new TbInfoEntryDto.InfoEntryCreateReqDto(savedEntity);
     }
 
-    @Override
-    public TbInfoEntryDto.InfoEntryCreateReqDto readInfo(int tbinfoid) {
-        TbInfoEntry tbInfoEntry = tbInfoEntryRepository.findByTbInfoId(tbinfoid)
-                .orElseThrow(() -> new RuntimeException("No data found with tbInfoId: " + tbinfoid));
-        return new TbInfoEntryDto.InfoEntryCreateReqDto(tbInfoEntry);
-    }
+
 
     @Override
-    public TbInfoEntryDto.InfoEntryCreateReqDto updateInfo(TbInfoEntryDto.InfoEntryCreateReqDto param) {
-        TbInfoEntry tbInfoEntry = tbInfoEntryRepository.findByTbInfoId(param.getTbInfoId())
-                .orElseThrow(() -> new RuntimeException("No data found with tbInfoId: " + param.getTbInfoId()));
-
+    public TbInfoEntryDto.InfoEntryCreateReqDto updateInfo(int tbInfoId,TbInfoEntryDto.InfoEntryCreateReqDto param) {
+        TbInfoEntry tbInfoEntry = tbInfoEntryRepository.findById(tbInfoId)
+                .orElseThrow(() -> new EntityNotFoundException("No data found with tbInfoId: " + param.getTbInfoId()));
 
         // Update fields
         tbInfoEntry.setInfoName(param.getInfoName());
@@ -53,7 +48,15 @@ public class TbInfoEntryServiceImpl implements TbInfoEntryService {
 
         TbInfoEntry updatedEntity = tbInfoEntryRepository.save(tbInfoEntry);
 
-        return new TbInfoEntryDto.InfoEntryCreateReqDto(updatedEntity);
+        return TbInfoEntryDto.InfoEntryCreateReqDto.builder()
+                .tbInfoId(updatedEntity.getTbInfoId())
+                .infoName(updatedEntity.getInfoName())
+                .category(updatedEntity.getCategory())
+                .orderInfoShow(updatedEntity.getOrderInfoShow())
+                .orderCategoryShow(updatedEntity.getOrderCategoryShow())
+                .createdAt(updatedEntity.getCreatedAt())
+                .modifiedAt(updatedEntity.getModifiedAt())
+                .build();
     }
 
 

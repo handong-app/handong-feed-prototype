@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 public interface TbInfoEntryRepository extends JpaRepository<TbInfoEntry, Integer> {
-    Optional<TbInfoEntry> findByTbInfoId(Integer tbInfoId);
+    TbInfoEntry findByTbInfoId(Integer tbInfoId);
 }
 
 

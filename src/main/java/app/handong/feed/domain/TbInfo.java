@@ -51,7 +51,7 @@ public class TbInfo {
     }
 
     // 생성자
-    public TbInfo(Integer tbInfoId, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username) {
+    public TbInfo(Integer tbInfoId, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username, LocalDateTime createdAt) {
         this.tbInfoId = tbInfoId;
         this.uid = uid;
         this.openDay = openDay;
@@ -60,11 +60,23 @@ public class TbInfo {
         this.breakDay = breakDay;
         this.etc = etc;
         this.username = username;
-//        this.createdAt = createdAt;
+        this.createdAt = createdAt;
     }
 
-    public static TbInfo of(Integer tbInfoId, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username) {
-        return new TbInfo(tbInfoId, uid, openDay, openTime, breakTime, breakDay, etc, username);
+    public void updateFields(TbInfoDto.InfoCreateReqDto dto) {
+        this.openDay = dto.getOpenDay();
+        this.openTime = dto.getOpenTime();
+        this.breakTime = dto.getBreakTime();
+        this.breakDay = dto.getBreakDay();
+        this.etc = dto.getEtc();
+        this.username = dto.getUsername();
+        this.createdAt = dto.toEntity().getCreatedAt();
+    }
+
+
+
+    public static TbInfo of(Integer tbInfoId, String uid, String openDay, String openTime, String breakTime, String breakDay, String etc, String username, LocalDateTime createdAt) {
+        return new TbInfo(tbInfoId, uid, openDay, openTime, breakTime, breakDay, etc, username, createdAt);
     }
 
     @PrePersist
@@ -84,6 +96,7 @@ public class TbInfo {
                 .breakDay(this.breakDay)
                 .etc(this.etc)
                 .username(this.username)
+                .createdAt(this.createdAt)
                 .build();
     }
 }
