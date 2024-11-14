@@ -26,7 +26,10 @@ const GoogleLoginComponent = ({ noRedirect }) => {
           setJwt(data.token);
           if (!noRedirect) navigate("/");
         } else {
-          alert("Login failed: " + data.message);
+          alert(
+            "Login failed: " +
+              (data.message || "한동 이메일로 다시 시도해보세요!")
+          );
         }
       })
       .catch((error) => console.error("Error:", error));
