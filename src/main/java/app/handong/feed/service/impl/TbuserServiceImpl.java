@@ -65,6 +65,8 @@ public class TbuserServiceImpl implements TbuserService {
 
     @Override
     public TbuserDto.CreateResDto loginWithGoogle(String credential) {
+        boolean checkHandongPeople = false;
+
         String[] out = googleAuthService.verifyGoogleToken(credential);
         String email = out[0];
         String name = out[1];
@@ -79,30 +81,53 @@ public class TbuserServiceImpl implements TbuserService {
 
 
         // 유저가 @handong.ac.kr 이메일이 아니면 예외 처리
-        if (email == null || !email.endsWith("@handong.ac.kr") || !email.endsWith("@handong.edu")) {
+        if (email != null){
+            if(email.endsWith("@handong.ac.kr")){
+                checkHandongPeople = true;
+            }
+            else if(email.endsWith("@handong.edu")) {
+                checkHandongPeople = true;
+            }
+        }
+
+        if(!checkHandongPeople){
             throw new NoAuthorizationException("Not Handong User");
+        }else{
+            Tbuser tbuser = tbuserRepository.findByEmail(email);
+
+            if (tbuser != null) {
+                // 유저가 있으면 이메일 출력
+                System.out.println("user " + tbuser.getEmail());
+                tbuser.setLast_login_time(now);
+            } else {
+                tbuser = Tbuser.of(email, uuid, name, now, now, now);
+                // 유저가 없는 경우 신규 가입
+            }
+            tbuserRepository.save(tbuser);
+
+            return TbuserDto.CreateResDto.builder().uid(tbuser.getId()).email(email).build();
         }
 
-        Tbuser tbuser = tbuserRepository.findByEmail(email);
-
-        if (tbuser != null) {
-            // 유저가 있으면 이메일 출력
-            System.out.println("user " + tbuser.getEmail());
-            tbuser.setLast_login_time(now);
-        } else {
-            tbuser = Tbuser.of(email, uuid, name, now, now, now);
-            // 유저가 없는 경우 신규 가입
-        }
-        tbuserRepository.save(tbuser);
-
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("email", email);
-//        params.put("uuid", uuid);
-//        params.put("name", name);
+//        Tbuser tbuser = tbuserRepository.findByEmail(email);
 //
-//        Map<String, Object> createResult = create(params);
-
-        return TbuserDto.CreateResDto.builder().uid(tbuser.getId()).email(email).build();
+//        if (tbuser != null) {
+//            // 유저가 있으면 이메일 출력
+//            System.out.println("user " + tbuser.getEmail());
+//            tbuser.setLast_login_time(now);
+//        } else {
+//            tbuser = Tbuser.of(email, uuid, name, now, now, now);
+//            // 유저가 없는 경우 신규 가입
+//        }
+//        tbuserRepository.save(tbuser);
+//
+////        Map<String, Object> params = new HashMap<>();
+////        params.put("email", email);
+////        params.put("uuid", uuid);
+////        params.put("name", name);
+////
+////        Map<String, Object> createResult = create(params);
+//
+//        return TbuserDto.CreateResDto.builder().uid(tbuser.getId()).email(email).build();
     }
 
 
