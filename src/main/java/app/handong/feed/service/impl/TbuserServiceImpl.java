@@ -65,7 +65,7 @@ public class TbuserServiceImpl implements TbuserService {
 
     @Override
     public TbuserDto.CreateResDto loginWithGoogle(String credential) {
-        boolean checkHandongPeople = false;
+
 
         String[] out = googleAuthService.verifyGoogleToken(credential);
         String email = out[0];
@@ -80,6 +80,7 @@ public class TbuserServiceImpl implements TbuserService {
         // 유저 객체 생성
 
 
+        boolean checkHandongPeople = false;
         // 유저가 @handong.ac.kr 이메일이 아니면 예외 처리
         if (email != null){
             if(email.endsWith("@handong.ac.kr")){
