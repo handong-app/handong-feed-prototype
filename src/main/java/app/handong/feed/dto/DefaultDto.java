@@ -11,6 +11,29 @@ import org.springframework.beans.BeanUtils;
 import java.util.List;
 
 public class DefaultDto {
+
+    @Builder
+    @Schema
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class IdReqDto{
+        @Schema(description = "id", example="UUID")
+        private String id;
+    }
+
+    @Builder
+    @Schema
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class IdResDto{
+        @Schema(description = "id", example="UUID")
+        private String id;
+    }
+
     @Builder
     @Schema
     @Getter

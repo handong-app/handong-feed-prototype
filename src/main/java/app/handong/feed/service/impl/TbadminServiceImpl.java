@@ -1,5 +1,6 @@
 package app.handong.feed.service.impl;
 
+import app.handong.feed.constants.Permission;
 import app.handong.feed.dto.TbadminDto;
 import app.handong.feed.exception.NoAuthorizationException;
 import app.handong.feed.id.UserPermId;
@@ -25,17 +26,19 @@ public class TbadminServiceImpl implements TbadminService {
     }
 
     public List<TbadminDto.UserDetail> adminGetUser(String userId, Map<String, String> param) {
-
-        if (tbUserPermRepository.findById(new UserPermId(userId, "adminGetUser")).isEmpty())
-            throw new NoAuthorizationException("No Admin Permission");
+        throwIfNotAdmin(userId, Permission.ADMIN_GET_USER);
         return tbadminMapper.allUsers();
     }
 
     public List<String> adminGetFirebaseStorageList(String userId) {
 
-        if (tbUserPermRepository.findById(new UserPermId(userId, "adminFirebaseFiles")).isEmpty())
-            throw new NoAuthorizationException("No Admin Permission");
+        throwIfNotAdmin(userId, Permission.ADMIN_FIREBASE_FILES);
         return firebaseService.listAllFiles("KaFile");
     }
 
+    @Override
+    public void throwIfNotAdmin(String userId, Permission permission) {
+        if (tbUserPermRepository.findById(new UserPermId(userId, permission.getValue())).isEmpty())
+            throw new NoAuthorizationException("No Admin Permission");
+    }
 }
