@@ -83,12 +83,12 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-export default function MainDrawer() {
+export default function MainDrawer({ noCount = false }) {
   const navigate = useNavigate();
   // eslint-disable-next-line unused-imports/no-unused-vars
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-  const [feedNumber] = useFeedCount();
+  const [feedNumber] = noCount ? [0] : useFeedCount();
 
   const MENUS = [
     {

@@ -1,7 +1,7 @@
 import { Box, CssBaseline } from "@mui/material";
 import MainDrawer from "../components/MainDrawer";
 
-function MainDisplay({ children }) {
+function MainDisplay({ children, noCount = false }) {
   return (
     <Box
       sx={{
@@ -14,7 +14,7 @@ function MainDisplay({ children }) {
       }}
     >
       <CssBaseline />
-      <MainDrawer />
+      <MainDrawer noCount={noCount} />
       <Box
         component="main"
         sx={{ flexGrow: 1, px: 1.5, pb: 6, maxWidth: 700, mx: "auto" }}

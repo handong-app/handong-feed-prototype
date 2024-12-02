@@ -14,6 +14,7 @@ import FavFeed from "./pages/FavFeed";
 import PWAInstallModal from "./components/modals/PWAInstallModal";
 import { ADMINMENU } from "./pages/admin";
 import KafeedDetail from "./pages/KafeedDetail";
+import LabScreen from "./pages/LabScreen";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/kafeed/:messageId",
     element: <KafeedDetail />,
+  },
+  {
+    path: "/lab",
+    element: <LabScreen />,
   },
   ...ADMINMENU.map((menu) => ({
     path: `/admin/${menu.id}`,
