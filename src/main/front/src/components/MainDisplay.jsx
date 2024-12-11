@@ -19,9 +19,9 @@ function MainDisplay({ children, noCount = false }) {
         component="main"
         sx={{ flexGrow: 1, px: 1.5, pb: 6, maxWidth: 700, mx: "auto" }}
       >
-        <Alert variant="filled" severity="error" sx={{ borderRadius: 0 }}>
+        <Alert severity="warning" sx={{ borderRadius: 0, my: 1 }}>
           <AlertTitle>
-            새로운 피드 추가가 되지 않는 오류 발생{" "}
+            새로운 피드 추가가 <b>지연</b>되는 오류 발생{" "}
             <a
               style={{ color: "white" }}
               href="https://board.handong.app/feed/num/31"
