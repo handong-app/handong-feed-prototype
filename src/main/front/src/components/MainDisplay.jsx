@@ -23,7 +23,7 @@ function MainDisplay({ children, noCount = false }) {
           <AlertTitle>
             새로운 피드 추가가 <b>지연</b>되는 오류 발생{" "}
             <a
-              style={{ color: "white" }}
+              style={{ color: "black" }}
               href="https://board.handong.app/feed/num/31"
               target="_blank"
               rel="noopener noreferrer"
@@ -31,7 +31,7 @@ function MainDisplay({ children, noCount = false }) {
               (#31)
             </a>
           </AlertTitle>
-          현재 개발팀이 문제를 해결 중이나, 시험 기간으로 인해 시간이 다소 걸릴
+          현재 개발팀이 문제를 해결 중이나, 방학 기간으로 인해 시간이 다소 걸릴
           수 있습니다.
         </Alert>
 
