@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.handong.feed.mapper.TblostItemMapper">
+
+    <!-- 분실물 상세 조회 쿼리 -->
+    <select id="getLostItemDetailById" resultMap="lostItemResultMap">
+        SELECT
+            ti.id AS id,
+            ti.lostPersonName AS lostPersonName,
+            ti.content AS content,
+            ti.createdAt AS createdAt,
+            GROUP_CONCAT(tif.fileName ORDER BY tif.FileOrder ASC) AS fileNames
+        FROM
+            mydb_TblostItem ti
+                LEFT JOIN
+            mydb_TblostItemFile tif ON ti.id = tif.tblostId
+        WHERE
+            ti.id = #{id}
+    </select>
+
+    <!-- 분실물 전체 조회 쿼리 -->
+    <select id="getAllLostItems" resultMap="lostItemResultMap">
+        SELECT
+            ti.id AS id,
+            ti.lostPersonName AS lostPersonName,
+            ti.content AS content,
+            ti.createdAt AS createdAt,
+            GROUP_CONCAT(tif.fileName ORDER BY tif.fileOrder ASC) AS fileNames
+        FROM
+            mydb_TblostItem ti
+                LEFT JOIN
+            mydb_TblostItemFile tif ON ti.id = tif.tblostId
+        GROUP BY
+            ti.id
+        ORDER BY
+            ti.createdAt DESC
+    </select>
+
+    <resultMap id="lostItemResultMap" type="app.handong.feed.dto.TblostItemDto$DetailServDto">
+        <id property="id" column="id" />
+        <result property="lostPersonName" column="lostPersonName" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="createdAt" />
+        <result property="fileNames" column="fileNames" />
+    </resultMap>
+
+    <!-- 분실물 작성자 조회 쿼리 -->
+    <select id="getAuthorIdByItemId" resultType="app.handong.feed.dto.DefaultDto$IdResDto">
+        SELECT ti.userId AS id
+        FROM mydb_TblostItem ti
+        WHERE ti.id = #{id}
+    </select>
+</mapper>
