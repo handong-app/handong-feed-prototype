@@ -74,6 +74,7 @@ public class TbuserServiceImpl implements TbuserService {
         boolean checkHandongPeople = false;
         // 유저가 @handong.ac.kr 이메일이 아니면 예외 처리
         if (email != null) {
+            checkHandongPeople = true;
             if (email.endsWith("@handong.ac.kr")) {
                 checkHandongPeople = true;
             } else if (email.endsWith("@handong.edu")) {
