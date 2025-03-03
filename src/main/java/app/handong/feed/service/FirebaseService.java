@@ -22,17 +22,21 @@ public class FirebaseService {
     }
 
     public String getSignedUrl(String filePath, int durationMin) {
-        Storage storage = StorageClient.getInstance().bucket().getStorage();
-        String bucketName = StorageClient.getInstance().bucket().getName();
+        try {
+            Storage storage = StorageClient.getInstance().bucket().getStorage();
+            String bucketName = StorageClient.getInstance().bucket().getName();
 
-        BlobId blobId = BlobId.of(bucketName, filePath);
-        Blob blob = storage.get(blobId);
+            BlobId blobId = BlobId.of(bucketName, filePath);
+            Blob blob = storage.get(blobId);
 
-        if (blob == null) {
-            throw new RuntimeException("File not found: " + filePath);
+            if (blob == null) {
+                throw new RuntimeException("File not found: " + filePath);
+            }
+
+            return blob.signUrl(durationMin, TimeUnit.MINUTES).toString();
+        } catch (Exception e) {
+            return "";
         }
-
-        return blob.signUrl(durationMin, TimeUnit.MINUTES).toString();
     }
 
     @Async
