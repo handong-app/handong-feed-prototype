@@ -19,6 +19,20 @@ function MainDisplay({ children, noCount = false }) {
         component="main"
         sx={{ flexGrow: 1, px: 1.5, pb: 6, maxWidth: 700, mx: "auto" }}
       >
+        <Alert severity="error" sx={{ borderRadius: 0, my: 1 }}>
+          <AlertTitle>
+            많은 방문자로 인해 이미지가 불러와지지 않습니다{" "}
+            <a
+              style={{ color: "black" }}
+              href="https://board.handong.app/feed/num/32"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              (#32)
+            </a>
+          </AlertTitle>
+          현재 개발팀이 문제를 해결 중에 있습니다. 불편을 드려 죄송합니다.
+        </Alert>
         <Alert severity="warning" sx={{ borderRadius: 0, my: 1 }}>
           <AlertTitle>
             새로운 피드 추가가 <b>지연</b>되는 오류 발생{" "}
