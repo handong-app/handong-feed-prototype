@@ -32,7 +32,7 @@ const FeedCardGalleryContent = ({ filteredImages, images }) => {
           <FeedCardImageItem key={index} url={url} index={index} />
         ) : // <img key={index} src={url} alt={`${index + 1}`} loading="lazy" />
         isVideo(url) ? (
-          <video key={index} controls>
+          <video key={index} controls crossOrigin="anonymous" preload="none">
             <source src={url} type={`video/${getExtensionFromUrl(url)}`} />
             Your browser does not support the video tag.
           </video>
