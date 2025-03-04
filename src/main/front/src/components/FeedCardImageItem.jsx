@@ -32,6 +32,7 @@ function FeedCardImageItem({ url, index, hidden }) {
           alt={`image-${index}`}
           className="thumbnail"
           loading="lazy"
+          crossOrigin="anonymous"
           style={
             { display: hidden ? "none" : "block" }
             // { display: "block" }
@@ -48,6 +49,7 @@ const preloadImage = (src) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = src;
+    img.crossOrigin = "anonymous";
     img.onload = () => resolve({ width: img.width, height: img.height });
     img.onerror = reject;
   });
