@@ -33,5 +33,10 @@ public class UserInteractionController {
         return userInteractionService.unLike(param, request.getAttribute("reqUserId").toString());
     }
 
+    @PostMapping("/readall")
+    public String postReadAll(@Valid @RequestBody UserInteractionDto.ReadAllReqDto param, HttpServletRequest request) {
+        return userInteractionService.readAll(param, request.getAttribute("reqUserId").toString());
+    }
+
 
 }

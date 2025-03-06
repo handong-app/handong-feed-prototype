@@ -1,0 +1,17 @@
+meta {
+  name: ReadAll
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/feeduser/readall
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "lastSentAt": 1734584462
+  }
+}

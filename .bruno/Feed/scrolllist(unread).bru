@@ -1,0 +1,16 @@
+meta {
+  name: scrolllist(unread)
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/api/kafeed/scrolllist?afterSentAt=-1&type=unseen
+  body: none
+  auth: none
+}
+
+params:query {
+  afterSentAt: -1
+  type: unseen
+}

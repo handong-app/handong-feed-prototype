@@ -2,11 +2,13 @@ package app.handong.feed.service.impl;
 
 import app.handong.feed.domain.TbUserInteraction;
 import app.handong.feed.domain.TbUserLike;
+import app.handong.feed.domain.TbUserReadAll;
 import app.handong.feed.dto.UserInteractionDto;
 import app.handong.feed.exception.DuplicateEntityException;
 import app.handong.feed.id.UserSubjectId;
 import app.handong.feed.repository.TbUserInteractionRepository;
 import app.handong.feed.repository.TbUserLikeRepository;
+import app.handong.feed.repository.TbUserReadAllRepository;
 import app.handong.feed.service.UserInteractionService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ public class UserInteractionServiceImpl implements UserInteractionService {
 
     private final TbUserInteractionRepository tbUserInteractionRepository;
     private final TbUserLikeRepository tbUserLikeRepository;
+    private final TbUserReadAllRepository tbUserReadAllRepository;
 
-    public UserInteractionServiceImpl(TbUserInteractionRepository tbUserInteractionRepository, TbUserLikeRepository tbUserLikeRepository) {
+    public UserInteractionServiceImpl(TbUserInteractionRepository tbUserInteractionRepository, TbUserLikeRepository tbUserLikeRepository, TbUserReadAllRepository tbUserReadAllRepository) {
         this.tbUserInteractionRepository = tbUserInteractionRepository;
         this.tbUserLikeRepository = tbUserLikeRepository;
+        this.tbUserReadAllRepository = tbUserReadAllRepository;
     }
 
     @Override
@@ -50,4 +54,15 @@ public class UserInteractionServiceImpl implements UserInteractionService {
         tbUserLikeRepository.deleteById(new UserSubjectId(userId, param.getSubjectId()));
         return "{}";
     }
+
+    @Override
+    public String readAll(UserInteractionDto.ReadAllReqDto param, String userId){
+        try {
+            tbUserReadAllRepository.save(new TbUserReadAll(userId, param.getLastSentAt()));
+        } catch (DuplicateKeyException ignored) {
+        }
+
+        return "{}";
+    }
+
 }
