@@ -24,6 +24,16 @@ public class UserInteractionDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class ReadAllReqDto {
+        @Schema(description = "lastSentAt", example = "")
+        private int lastSentAt;
+    }
+
+    @Schema
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Detail {
         @Schema(description = "title", example = "")
         private int subjectId;

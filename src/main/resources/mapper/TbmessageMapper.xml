@@ -21,6 +21,7 @@
             FROM mydb_TbUserInteraction m
             WHERE s.id = m.subjectId
             AND #{userId} = m.userId)
+            AND last_sent_at > (SELECT COALESCE(MAX(read_last_sent_at), 0)  FROM mydb_TbUserReadAll WHERE id = #{userId})
         </if>
         <if test="fetchType == 'like' and userId != null and userId != ''">
             AND EXISTS (
@@ -47,6 +48,7 @@
             FROM mydb_TbUserInteraction m
             WHERE s.id = m.subjectId
             AND #{userId} = m.userId)
+            AND last_sent_at > (SELECT COALESCE(MAX(read_last_sent_at), 0)  FROM mydb_TbUserReadAll WHERE id = #{userId})
         </if>
         ORDER BY last_sent_at DESC) AS subject
     </select>

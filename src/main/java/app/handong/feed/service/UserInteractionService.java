@@ -13,4 +13,5 @@ public interface UserInteractionService {
 
     String unLike(UserInteractionDto.SeenSubjectReqDto param, String userId);
 
+    String readAll(UserInteractionDto.ReadAllReqDto param, String userId);
 }
