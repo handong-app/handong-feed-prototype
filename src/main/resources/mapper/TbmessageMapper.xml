@@ -14,14 +14,12 @@
         SELECT *
         FROM TbSubject s
         WHERE last_sent_at &lt; #{afterSentAt}
---         AND last_sent_at &gt; (UNIX_TIMESTAMP() - (3 * 24 * 60 * 60))
         <if test="fetchType == 'unseen' and userId != null and userId != ''">
             AND NOT EXISTS (
             SELECT 1
             FROM mydb_TbUserInteraction m
             WHERE s.id = m.subjectId
             AND #{userId} = m.userId)
-            AND last_sent_at > (SELECT COALESCE(MAX(read_last_sent_at), 0)  FROM mydb_TbUserReadAll WHERE id = #{userId})
         </if>
         <if test="fetchType == 'like' and userId != null and userId != ''">
             AND EXISTS (
@@ -35,6 +33,15 @@
         ) AS subject
         JOIN TbKaMessage AS message ON message.chat_id = subject.last_sent_chat_id
         LEFT JOIN mydb_TbUserLike AS likeDB ON subject.id = likeDB.subjectId AND #{userId} = likeDB.userId
+        <if test="fetchType == 'unseen'">
+            WHERE (SELECT MIN(last_sent_at)
+            FROM TbKaMessage
+            WHERE subject_id = subject.id)
+            > (SELECT COALESCE(MAX(read_last_sent_at), 0)
+            FROM mydb_TbUserReadAll
+            WHERE id = #{userId})
+        </if>
+
     </select>
 
     <select id="countAll" parameterType="map" resultType="java.lang.Integer">
@@ -42,13 +49,17 @@
         FROM (SELECT *
         FROM TbSubject s
         WHERE last_sent_at &lt; #{afterSentAt}
---         AND last_sent_at &gt; (UNIX_TIMESTAMP() - (3 * 24 * 60 * 60))
         <if test="userId != null and userId != ''">
             AND NOT EXISTS (SELECT 1
             FROM mydb_TbUserInteraction m
             WHERE s.id = m.subjectId
             AND #{userId} = m.userId)
-            AND last_sent_at > (SELECT COALESCE(MAX(read_last_sent_at), 0)  FROM mydb_TbUserReadAll WHERE id = #{userId})
+            AND (SELECT MIN(last_sent_at)
+            FROM TbKaMessage
+            WHERE subject_id = s.id)
+            > (SELECT COALESCE(MAX(read_last_sent_at), 0)
+            FROM mydb_TbUserReadAll
+            WHERE id = #{userId})
         </if>
         ORDER BY last_sent_at DESC) AS subject
     </select>
