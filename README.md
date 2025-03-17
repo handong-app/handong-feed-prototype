@@ -15,7 +15,7 @@ https://www.youtube.com/watch?v=xpXz107p8Gw
 
 ## 요구사항 포스터
 
-![A1 (300 DPI)](https://github.com/user-attachments/assets/fa1754a5-933e-4e82-bafc-d9a935b69d11)
+![A1 (300 DPI)](https://github.com/user-attachments/assets/e997e40b-d013-4f96-aaef-9fb646ff3838)
 
 ## 개발 스택
 
