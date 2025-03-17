@@ -8,7 +8,7 @@ https://feed.handong.app/
 
 ## 소개 영상 (뮤직비디오)
 
-[![Youtube Thumbnail](https://github.com/user-attachments/assets/04ad07e6-6e31-415b-98c7-afa5aeb4bbb1)](https://www.youtube.com/watch?v=xpXz107p8Gw)
+[![Youtube Thumbnail](https://github.com/user-attachments/assets/6028ccdb-4c9f-406b-baf9-16566bdf513e)](https://www.youtube.com/watch?v=xpXz107p8Gw)
 
 **[2024 HGU SW Festival Grand Award (대상)] HandongFeed (한동피드) 소개영상**  
 https://www.youtube.com/watch?v=xpXz107p8Gw
