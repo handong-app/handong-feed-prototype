@@ -19,7 +19,7 @@ https://www.youtube.com/watch?v=xpXz107p8Gw
 
 ## 개발 스택
 
-- Spring Boot?
+- Spring Boot
 - React
 - MYSQL
 
